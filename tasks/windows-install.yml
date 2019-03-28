@@ -1,0 +1,193 @@
+
+# validation
+
+- name: assert all vars are set
+  assert: { that: "{{ item }} != '' " }
+  with_items:
+  - app_name
+  - temp_folder
+  - clear_temp_folder
+  - service_name
+  - main_class
+  - installation_folder
+  - clear_before_install
+  - server_port
+  - jmx_port
+  - installer_file_name
+  - s3_download_url
+  - launcher_file_name
+  - db_connection_string
+  - db_username
+  - extra_app_props
+
+# required dependencies
+
+- name: install nssm dependency
+  win_chocolatey:
+    name: nssm
+  become: yes
+
+- name: make sure java is installed on the machine
+  win_command: java -version
+  register: java_test
+  ignore_errors: yes
+
+- name: fail if java is not found
+  fail:
+    msg: java must be accesible in path
+  when: java_test.rc != 0
+
+# set temp folder
+
+- name: make sure temp folder exists
+  win_file:
+    path: "{{ temp_folder }}"
+    state: directory
+
+# download the file
+
+- name: download zip from s3 url
+  win_get_url:
+    url: "{{ s3_download_url }}"
+    dest: "{{ temp_folder }}\\{{ installer_file_name }}"
+    force: no
+  when: custom_download_url == ""
+
+- name: download zip from custom url
+  win_get_url:
+    url: "{{ custom_download_url }}"
+    dest: "{{ temp_folder }}\\{{ installer_file_name }}"
+    force: no
+  when: custom_download_url != ""
+
+# stop old service
+
+- name: stop the old service
+  win_nssm:
+    name: "{{ service_name }}"
+    state: absent
+  become: yes
+
+# delete old installation (optional)
+
+- name: clear old installation folder
+  win_file: 
+    path: "{{ installation_folder }}"
+    state: absent
+  when: clear_before_install == True
+
+# unpack all the files to the installation folder
+
+- name: make sure installation folder exists
+  win_file:
+    path: "{{ installation_folder }}"
+    state: directory
+  become: yes
+
+- name: make sure unzip folder exists
+  win_file:
+    path: "{{ temp_folder }}\\{{ (installer_file_name | splitext)[0] }}"
+    state: directory
+  become: yes
+
+- name: unzip the file
+  win_unzip:
+    src: "{{ temp_folder }}\\{{ installer_file_name }}"
+    dest: "{{ temp_folder }}\\{{ (installer_file_name | splitext)[0] }}"
+    remote_src: yes
+    creates: "{{ temp_folder }}\\{{ (installer_file_name | splitext)[0] }}\\{{ convention }}"
+  become: yes
+
+- name: copy the file to installation folder
+  win_copy:
+    src: "{{ temp_folder }}\\{{ (installer_file_name | splitext)[0] }}\\{{ convention }}\\"
+    dest: "{{ installation_folder }}"
+    force: no
+    remote_src: yes
+  become: yes
+
+- name: copy start script
+  win_template:
+    src: start.bat.j2
+    dest: "{{ installation_folder }}\\{{ launcher_file_name }}"
+  become: yes
+
+# configure installed 
+
+- name: update application properties file
+  win_lineinfile:
+    path: "{{ installation_folder }}\\conf\\application.properties"
+    line: "{{ item.key }}={{ item.value }}"
+    regexp: "^{{ item.key | replace('.', '\\.') }}="
+  with_dict:
+    - "server.port": "{{ server_port }}"
+    - "spring.datasource.url": "{{ db_connection_string }}"
+    - "spring.datasource.username": "{{ db_username | default('postgres') }}"
+    - "spring.datasource.password": "{{ db_password }}"   
+  become: yes
+
+- name: update custom application properties file (optional)
+  lineinfile:
+    path: "{{ installation_folder }}\\conf\\application.properties"
+    line: "{{ item.key }}={{ item.value }}"
+    regexp: "^{{ item.key | replace('.', '\\.') }}="
+  with_dict: "{{ extra_app_props | default({}) }}"
+  become: yes
+
+- name: update server port
+  win_lineinfile:
+    state: present
+    path: "{{ installation_folder }}\\conf\\cloudserver.conf.xml"
+    line: "<main-port>{{ server_port }}</main-port>"
+    regexp: "^<main-port>\\d*<\\/main-port>"
+  become: yes
+
+- name: set permissions for logs folder
+  win_file:
+    path: "{{ installation_folder }}\\logs"
+    state: directory
+  become: yes
+
+# QUESTION should remove pairing key for cloud ?
+
+# - name: reset pairing key
+#   win_file:
+#     path: "{{ installation_folder }}\\conf\\pairing.conf.xml"
+#     state: absent
+#   become: yes
+
+# install the service
+
+- name: create the service
+  win_nssm:
+    name: "{{ service_name }}"
+    application: "{{ installation_folder }}\\{{ launcher_file_name }}"
+    stdout_file: "{{ installation_folder }}\\logs\\server.out.log"
+    stderr_file: "{{ installation_folder }}\\logs\\server.err.log"
+    state: present
+  become: yes
+  notify:
+    - start the service
+
+# clear temp files (optional)
+
+- name: clear temp folder
+  win_file:
+    path: "{{ temp_folder }}"
+    state: absent
+  when: clear_temp_folder == True
+
+# expose role output
+
+- name: sanitize role name
+  set_fact:
+    sanitize_role_name: "{{ role_name | replace('-', '_') | regex_replace('([^A-Za-z0-9_])', '') | trim }}"
+
+- name: expose role output
+  set_fact:
+    "{{ sanitize_role_name }}":
+      server_port: "{{ server_port }}"
+      jmx_port: "{{ jmx_port }}"
+      installation_folder: "{{ installation_folder }}"
+      configuration_file: "{{ installation_folder }}\\conf\\application.properties"
+      configuration_xml_file: "{{ installation_folder }}\\conf\\cloudserver.conf.xml"

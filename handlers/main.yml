@@ -1,0 +1,4 @@
+
+- name: start the service
+  include: handlers/start-service.yml
+  when: start_after_install | default(false) | bool

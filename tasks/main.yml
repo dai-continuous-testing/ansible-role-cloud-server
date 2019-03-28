@@ -1,0 +1,13 @@
+---
+
+- name: gather os specific variables
+  include_vars: 
+    file: "{{ ansible_os_family | lower }}.yml"
+
+- name: install
+  include_tasks: "tasks/{{ ansible_os_family | lower }}-install.yml"
+  when: state|default('present') == 'present'
+
+- name: uninstall
+  include_tasks: "tasks/{{ ansible_os_family | lower }}-uninstall.yml"
+  when: state|default('present') == 'absent'

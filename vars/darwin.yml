@@ -1,0 +1,14 @@
+---
+
+installation_folder: "{{ ansible_user_dir }}/experitest/{{ app_name }}-{{ app_version }}"
+
+temp_folder: "/tmp/experitest"
+
+service_plist_file_path: "/Library/LaunchDaemons/{{ service_name }}.plist"
+
+installer_file_name: "dist-Mac-SERVER-{{ app_version }}.zip"
+
+relative_path: "cloud-server/osx"
+s3_download_url : "https://{{ cdn_name }}/{{ relative_path }}/{{ installer_file_name }}"
+
+launcher_file_name: "start.sh"

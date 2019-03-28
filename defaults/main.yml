@@ -1,0 +1,22 @@
+---
+
+app_name: cloudserver
+service_name: "com.experitest.{{ app_name }}"
+main_class: "com.experitest.cloudserver.CloudServerMain"
+
+server_port: 8080
+jmx_port: 51234
+
+db_connection_string: "jdbc:postgresql://localhost:5432/cloudserver"
+db_username: postgres
+db_password: ""
+
+extra_app_props: {}
+
+start_after_install: True
+
+clear_temp_folder: False
+clear_before_install: False
+
+convention: "Server"
+cdn_name: "devops-artifacts.experitest.com"

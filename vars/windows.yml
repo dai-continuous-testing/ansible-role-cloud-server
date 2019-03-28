@@ -1,0 +1,14 @@
+---
+
+installation_folder: "C:\\Experitest\\{{ app_name }}-{{ app_version }}"
+
+temp_folder: "c:\\temp\\experitest"
+
+service_name: "{{ app_name }}"
+
+installer_file_name: "dist-Windows-SERVER-{{ app_version }}.zip"
+
+relative_path: "cloud-server/windows"
+s3_download_url : "https://{{ cdn_name }}/{{ relative_path }}/{{ installer_file_name }}"
+
+launcher_file_name: "start.bat"
