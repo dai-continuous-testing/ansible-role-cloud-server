@@ -127,7 +127,7 @@
     state: present
     path: "{{ installation_folder }}\\conf\\cloudserver.conf.xml"
     line: "<main-port>{{ server_port }}</main-port>"
-    regexp: "^<main-port>\\d*<\\/main-port>"
+    regexp: "<main-port>\\d*<\\/main-port>"
   become: yes
 
 - name: set permissions for logs folder
