@@ -19,7 +19,7 @@
   - launcher_file_name
   - db_connection_string
   - db_username
-  - extra_app_props
+  - application_properties
 
 # required dependencies
 
@@ -127,19 +127,7 @@
     path: "{{ installation_folder }}/conf/application.properties"
     line: "{{ item.key }}={{ item.value }}"
     regexp: "^{{ item.key | replace('.', '\\.') }}="
-  with_dict:
-    - "server.port": "{{ server_port }}"
-    - "spring.datasource.url": "{{ db_connection_string }}"
-    - "spring.datasource.username": "{{ db_username | default('postgres') }}"
-    - "spring.datasource.password": "{{ db_password }}"    
-  become: yes
-
-- name: update custom application properties file (optional)
-  lineinfile:
-    path: "{{ installation_folder }}/conf/application.properties"
-    line: "{{ item.key }}={{ item.value }}"
-    regexp: "^{{ item.key | replace('.', '\\.') }}="
-  with_dict: "{{ extra_app_props | default({}) }}"
+  with_dict: "{{ application_properties }}"
   become: yes
 
 - name: update server port
