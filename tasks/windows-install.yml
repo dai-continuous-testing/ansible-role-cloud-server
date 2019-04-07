@@ -19,6 +19,7 @@
   - db_connection_string
   - db_username
   - application_properties
+  - extra_java_options
 
 # required dependencies
 

@@ -9,6 +9,8 @@ main_class: "com.experitest.cloudserver.CloudServerMain"
 server_port: 8080
 jmx_port: 51234
 
+extra_java_options: []
+
 db_connection_string: "jdbc:postgresql://localhost:5432/cloudserver"
 db_username: postgres
 db_password: ""
