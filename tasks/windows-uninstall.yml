@@ -12,6 +12,11 @@
     state: absent
   become: yes
 
+# uninstall hasp
+- name: remove hasp installation
+  win_command: '"{{ installation_folder }}\\bin\\haspdinst.exe" -r -fr -criticalmsg'
+  become: yes
+
 - name: remove installation folder
   win_file: 
     path: "{{ installation_folder }}"

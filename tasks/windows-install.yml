@@ -150,6 +150,13 @@
 #     state: absent
 #   become: yes
 
+
+# install hasp
+
+- name: run hasp installer
+  win_command: '"{{ installation_folder }}\\bin\\haspdinst.exe" -i -fi -criticalmsg'
+  become: yes
+
 # install the service
 
 - name: create the service
