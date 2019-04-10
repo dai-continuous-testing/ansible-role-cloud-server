@@ -155,6 +155,12 @@
 #     state: absent
 #   become: yes
 
+# install hasp
+
+- name: run hasp installer
+  command: 'sudo /usr/sbin/installer -allowUntrusted -verboseR -dumplog -pkg "{{ hasp_installer }}" -target /'
+  become: yes
+
 # clear temp files (optional)
 
 - name: clear temp folder
