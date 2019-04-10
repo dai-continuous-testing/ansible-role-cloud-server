@@ -3,7 +3,7 @@
 
   pre_tasks:
     
-    # windows installation requires nssm
+    # example for java installation
     - win_chocolatey: name=jdk8
       when: ansible_os_family == "Windows"
 
