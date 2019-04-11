@@ -4,8 +4,8 @@
 # configures - powershell, firewall, and winrm settings
 #########################################################
 
-$username = <username>
-$password = <password>
+$username = "<username>"
+$password = "<password>"
 
 ###
 
