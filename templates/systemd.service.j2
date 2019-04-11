@@ -1,0 +1,12 @@
+
+[Unit]
+Description={{ service_name }}
+
+[Service]
+WorkingDirectory={{ installation_folder }}
+ExecStart={{ installation_folder }}/start.sh
+Type=simple
+User={{ service_username | default(ansible_user_id) }}
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,26 @@
+
+- name: start the service (windows)
+  win_nssm: 
+    name: "{{ service_name }}"
+    application: "{{ installation_folder }}\\{{ launcher_file_name }}"
+    stdout_file: "{{ installation_folder }}\\logs\\server.out.log"
+    stderr_file: "{{ installation_folder }}\\logs\\server.err.log"
+    state: restarted
+  register: winsvc_state
+  ignore_errors: True    
+  become: yes
+
+- name: read logs if service failed (windows)
+  win_shell: "Get-Content -tail 100 {{ installation_folder }}\\logs\\server.err.log"
+  when: winsvc_state.failed
+  register: error_log
+
+- name: print log file
+  debug:
+    var: error_log
+  when: winsvc_state.failed
+
+- name: fail if start failed
+  fail: 
+    msg: service start failed
+  when: winsvc_state.failed

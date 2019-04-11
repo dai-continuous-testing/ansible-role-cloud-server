@@ -1,0 +1,4 @@
+
+- name: start the service
+  command: "launchctl load {{ service_plist_file_path }}"
+  become: yes
