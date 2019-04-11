@@ -20,6 +20,7 @@ base_application_properties:
   - "spring.datasource.url": "{{ db_connection_string }}"
   - "spring.datasource.username": "{{ db_username | default('postgres') }}"
   - "spring.datasource.password": "{{ db_password }}"   
+  - "spring.datasource.driver-class-name": "org.postgresql.Driver"
 
 extra_application_properties: {}
 
