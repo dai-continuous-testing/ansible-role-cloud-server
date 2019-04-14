@@ -71,10 +71,8 @@
   systemd:
     name: "{{ service_name }}"
     state: stopped
-  register: stop_service
+  ignore_errors: yes
   become: yes
-
-- debug: var=stop_service
 
 # delete old installation (optional)
 
