@@ -12,4 +12,7 @@ relative_path: "cloud-server/osx"
 
 launcher_file_name: "start.sh"
 
-hasp_installer: "{{ installation_folder }}/bin/mac_hasp_install/SentinelRuntimeInstaller.framework/Versions/A/Resources/Sentinel Runtime.pkg"
+hasp_installer_tar_folder: "{{ installation_folder }}/bin/mac_hasp_install"
+
+hasp_installer_tar: "{{ hasp_installer_tar_folder }}/SentinelRuntime.tar"
+hasp_installer: "{{ hasp_installer_tar_folder }}/SentinelRuntimeInstaller.framework/Versions/A/Resources/Sentinel Runtime.pkg"
