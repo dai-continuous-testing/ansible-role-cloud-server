@@ -158,7 +158,7 @@
 # install hasp
 
 - name: tar the sentinel runtime
-  command: 'sudo /usr/bin/tar {{ hasp_installer_tar }}'
+  command: 'sudo /usr/bin/tar -xf {{ hasp_installer_tar }}'
   args:
     chdir: "{{ hasp_installer_tar_folder }}"
   become: yes
