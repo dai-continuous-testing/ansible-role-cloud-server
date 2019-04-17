@@ -21,7 +21,7 @@ Role Variables
 | extra_java_options | extand java options | array of strings | [] | no |
 | db_connection_string | connection string to postgres | string | jdbc:postgresql://localhost:5432/cloudserver | no |
 | db_username | username for db connection | string | postgres | no |
-| db_password | password for db connection | string |  | no |
+| db_password | password for db connection | string |  | yes |
 | installation_folder | the folder in which the applction will be installed | string | for mac: ~/experitest/cloud-server-version <br> for windows: C:\\Experitest\\cloud-server-version  | no |
 | jmx_port | port number for jmx inspection | number | 51234 | no |
 | custom_download_url | custom url to download the installation from (zip format) | string |  | no |

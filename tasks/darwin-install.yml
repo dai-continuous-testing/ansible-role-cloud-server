@@ -19,6 +19,7 @@
   - launcher_file_name
   - db_connection_string
   - db_username
+  - db_password
   - application_properties
   - extra_java_options
 
