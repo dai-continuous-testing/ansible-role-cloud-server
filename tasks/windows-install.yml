@@ -24,8 +24,12 @@
 
 # required dependencies
 
-- name: disabled win_chocolatey_feature(useEnhancedExitCodes)
-  # workaroud a know issue of win chochlatey
+- name: install Chocolatey
+  win_chocolatey:
+    name: chocolatey
+    state: latest
+
+- name: disable enhanced exit codes
   win_chocolatey_feature:
     name: useEnhancedExitCodes
     state: disabled
