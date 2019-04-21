@@ -43,8 +43,16 @@ env:
 services:
   - postgresql
 
+addons:
+  postgresql: "10"
+  apt:
+    packages:
+    - postgresql-10
+    - postgresql-client-10
+
 install:
   - ./.travis/install.sh
+  - pip install pyOpenSSL ndg-httpsclient pyasn1
   - pip install ansible
 
 before_script:
