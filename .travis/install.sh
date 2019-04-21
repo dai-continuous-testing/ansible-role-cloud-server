@@ -8,16 +8,20 @@ if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
     
     sudo pip install ansible
 
-    while (! docker stats --no-stream ); do
+    DOCKER_BIN=/Applications/Docker.app/Contents/Resources/bin/docker
+
+    while (! $DOCKER_BIN stats --no-stream ); do
         # Docker takes a few seconds to initialize
         echo "Waiting for Docker to launch..."
         sleep 1
     done
 
-    docker ps -a
-    docker --version
-    docker run hello-world
-    
+    $DOCKER_BIN ps -a
+    $DOCKER_BIN --version
+    $DOCKER_BIN run hello-world
+
+    $DOCKER_BIN run -d -p 5432:5432 -e 'POSTGRES_PASSWORD=secretpassword' -e 'POSTGRES_DB=cloudserver' postgres:10
+
 fi
 
 if [ "$TRAVIS_OS_NAME" == "linux" ]; then
@@ -29,5 +33,7 @@ if [ "$TRAVIS_OS_NAME" == "linux" ]; then
     sudo apt-get install ansible -y
 
     sudo pip install requests[security]
+
+    docker run -d -p 5432:5432 -e 'POSTGRES_PASSWORD=secretpassword' -e 'POSTGRES_DB=cloudserver' postgres:10
 
 fi
