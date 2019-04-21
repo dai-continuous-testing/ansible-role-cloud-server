@@ -24,16 +24,6 @@
 
 # required dependencies
 
-- name: make sure java is installed on the machine
-  command: java -version
-  register: java_test
-  ignore_errors: yes
-
-- name: fail if java is not found
-  fail:
-    msg: java must be accesible in path
-  when: java_test.rc != 0
-
 - name: make sure rsync is installed
   yum:
     name: rsync
@@ -44,6 +34,16 @@
     name: java-1.8.0-openjdk-devel
     state: present
   when: install_java | default(false)
+
+- name: make sure java is installed on the machine
+  command: java -version
+  register: java_test
+  ignore_errors: yes
+
+- name: fail if java is not found
+  fail:
+    msg: java must be accesible in path
+  when: java_test.rc != 0
 
 # set temp folder
 
