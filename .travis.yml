@@ -1,0 +1,53 @@
+
+# language: python
+
+# matrix:
+#     include:
+
+#         - os: osx
+#           language: generic
+#           env: TEST_NAME=01_sanity
+
+#         # - os: osx
+#         #   language: generic
+#         #   env: TEST_NAME=02_install_twice
+
+#         # - os: osx
+#         #   language: generic
+#         #   env: TEST_NAME=03_install_uninstall
+
+#         # - os: osx
+#         #   language: generic
+#         #   env: TEST_NAME=04_uninstall
+
+#         # - os: osx
+#         #   language: generic
+#         #   env: TEST_NAME=05_outputs
+
+# install:
+#     - ./.travis/install.sh
+#     - pip install ansible
+    
+# script: 
+#   - ansible --version
+#   - cd $TRAVIS_BUILD_DIR/tests/$TEST_NAME && ./start.sh
+
+# cache: pip
+
+sudo: required
+env:
+  - TEST_NAME=01_sanity
+
+services:
+  - docker
+
+before_install:
+  - sudo apt-get update
+  - sudo apt-get upgrade lxc-docker
+  - echo 'DOCKER_OPTS="-H tcp://127.0.0.1:2375 -H unix:///var/run/docker.sock -s devicemapper"' | sudo tee /etc/default/docker > /dev/null
+  - sudo service docker restart
+  - sleep 5
+  - sudo docker pull geerlingguy/docker-amazonlinux2-ansible
+
+script:
+ - sudo docker run --rm=true -v `pwd`:/ansible-project:rw geerlingguy/docker-amazonlinux2-ansible /bin/bash -c "/ansible-project/tests/$TEST_NAME && ./start.sh"

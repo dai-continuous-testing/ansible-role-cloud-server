@@ -1,0 +1,7 @@
+---
+
+- hosts: localhost
+  
+  roles:
+  - role: ansible-role-app-signer
+    state: present

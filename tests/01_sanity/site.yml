@@ -1,0 +1,13 @@
+
+- hosts: localhost
+  become: yes
+  
+  vars_files:
+    - vars/cloud_db.yml
+
+  roles:
+    - geerlingguy.postgresql
+
+- hosts: localhost
+  roles:
+    - name: ansible-role-cloud-server
