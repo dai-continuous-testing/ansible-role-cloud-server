@@ -1,3 +1,0 @@
-
-- name: include linux task
-  include_tasks: "tasks/linux-uninstall.yml"

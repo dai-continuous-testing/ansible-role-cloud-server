@@ -1,4 +1,4 @@
 
 - name: start the service
-  include: "handlers/{{ ansible_os_family | lower }}-start-service.yml"
+  include: "handlers/{{ ansible_os_family | os_family_to_os_type }}-start-service.yml"
   when: start_after_install | default(false) | bool
