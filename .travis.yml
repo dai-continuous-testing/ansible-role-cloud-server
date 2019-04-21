@@ -51,3 +51,4 @@ before_install:
 
 script:
  - sudo docker run --rm=true -v `pwd`:/ansible-project:rw geerlingguy/docker-amazonlinux2-ansible /bin/bash -c "/ansible-project/tests/$TEST_NAME && ./start.sh"
+
