@@ -41,7 +41,7 @@ install:
   - ./.travis/install.sh
 
 before_script:
-  - docker run -p 5432:5432 -e 'POSTGRES_PASSWORD=secretpassword' -e 'POSTGRES_DB=cloudserver' postgres:10
+  - docker run -d -p 5432:5432 -e 'POSTGRES_PASSWORD=secretpassword' -e 'POSTGRES_DB=cloudserver' postgres:10
 
 script:
   - ansible --version
