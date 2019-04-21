@@ -17,17 +17,6 @@
   when: "service_name in services"
   become: yes
 
-# - name: stop the service
-#   systemd:
-#     state: stopped
-#     enabled: no
-#     daemon_reload: yes
-#     name: "{{ service_name }}"
-  
-#   register: service_status
-#   failed_when: ( 'Could not find the requested' not in service_status.msg )
-#   become: yes
-
 - name: remove the service
   file:
     path: "/etc/systemd/system/{{ service_name }}.service"

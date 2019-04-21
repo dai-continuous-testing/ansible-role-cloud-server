@@ -8,9 +8,9 @@ matrix:
           language: generic
           env: TEST_NAME=01_sanity
         
-        - os: osx
-          language: generic
-          env: TEST_NAME=01_sanity
+        # - os: osx
+        #   language: generic
+        #   env: TEST_NAME=01_sanity
 
         - dist: xenial
           language: generic
@@ -34,8 +34,8 @@ services:
 install:
   - ./.travis/install.sh
 
-# before_script:
-  # - docker run -d -p 5432:5432 -e 'POSTGRES_PASSWORD=secretpassword' -e 'POSTGRES_DB=cloudserver' postgres:10
+before_script:
+  - docker run -d -p 5432:5432 -e 'POSTGRES_PASSWORD=secretpassword' -e 'POSTGRES_DB=cloudserver' postgres:10
 
 script:
   - ansible --version
