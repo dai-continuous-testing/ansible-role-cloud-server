@@ -3,6 +3,15 @@
 if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
     echo "osx"
 
+    brew update 
+
+    brew cask install docker
+    /Applications/Docker.app/Contents/MacOS/Docker
+    docker ps -a
+    docker --version
+    docker run hello-world
+    
+
     sudo pip install ansible
 fi
 
