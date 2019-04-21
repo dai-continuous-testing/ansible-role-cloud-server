@@ -39,18 +39,17 @@ language: generic
 
 env:
   - TEST_NAME=01_sanity
+  - IMAGE_NAME=centos:7
 
 services:
   - docker
 
 before_install:
-  # - sudo apt-get update
-  # - sudo apt-get upgrade lxc-docker
-  # - echo 'DOCKER_OPTS="-H tcp://127.0.0.1:2375 -H unix:///var/run/docker.sock -s devicemapper"' | sudo tee /etc/default/docker > /dev/null
-  # - sudo service docker restart
-  # - sleep 5
-  - sudo docker pull geerlingguy/docker-amazonlinux2-ansible
+  - sudo docker pull $IMAGE_NAME
 
 script:
- - sudo docker run --rm=true -v `pwd`:/ansible-project:rw geerlingguy/docker-amazonlinux2-ansible /bin/bash -c "/ansible-project/tests/$TEST_NAME && ./start.sh"
-
+ - |
+  sudo docker run \
+    --rm=true \
+    -v `pwd`:/ansible-project:rw $IMAGE_NAME \
+    /bin/bash -c "cd /ansible-project/tests/$TEST_NAME && ./start.sh"

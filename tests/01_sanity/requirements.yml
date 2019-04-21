@@ -1,6 +1,2 @@
 
-- src: git+https://github.com/ExperitestOfficial/ansible-role-cloud-server.git
-  version: develop
-  name: cloud-server
-
 - name: geerlingguy.postgresql

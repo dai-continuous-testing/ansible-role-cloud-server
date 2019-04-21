@@ -3,9 +3,22 @@ set -ev
 
 echo "[STEP 1] installing dependencies"
 
-GIT_URL=$(git remote get-url origin)
+yum -y update
 
-ansible-galaxy install git+$GIT_URL,$TRAVIS_BRANCH --force
+yum -y install git
+
+curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py"
+python get-pip.py
+
+pip install ansible
+
+
+# GIT_URL=$(git remote get-url origin)
+
+GIT_URL=$(git config remote.origin.url)
+
+ansible-galaxy install -r requirements.yml --force
+ansible-galaxy install git+$GIT_URL,$ --force
 
 echo "[STEP 1] installing dependencies - completed successfully"
 
