@@ -1,7 +1,0 @@
-
-postgresql_databases:
-  - name: cloudserver
-
-postgresql_users:
-  - name: postgres
-    password: supersecure

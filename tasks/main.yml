@@ -4,6 +4,10 @@
   include_vars: 
     file: "{{ ansible_os_family | lower }}.yml"
 
+# - name: install dependencies
+#   include_tasks: "tasks/{{ ansible_os_family | lower }}-install.yml"
+#   when: state|default('present') == 'present'
+
 - name: install
   include_tasks: "tasks/{{ ansible_os_family | lower }}-install.yml"
   when: state|default('present') == 'present'
