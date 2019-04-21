@@ -36,6 +36,7 @@
 
 sudo: required
 language: generic
+dist: xenial
 
 env:
   - IMAGE_NAME=centos:7 TEST_NAME=01_sanity
