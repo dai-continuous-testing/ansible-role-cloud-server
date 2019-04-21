@@ -6,13 +6,27 @@
   - service_name
   - temp_folder
 
-- name: stop the service
-  systemd:
-    state: stopped
-    daemon_reload: yes
+- name: gather installed services
+  service_facts:
+
+- name: Stop pupppet service
+  service:
     name: "{{ service_name }}"
-    enabled: yes
+    state: stopped
+    enabled: no
+  when: "service_name in services"
   become: yes
+  
+# - name: stop the service
+#   systemd:
+#     state: stopped
+#     enabled: no
+#     daemon_reload: yes
+#     name: "{{ service_name }}"
+  
+#   register: service_status
+#   failed_when: ( 'Could not find the requested' not in service_status.msg )
+#   become: yes
 
 - name: remove the service
   file:
