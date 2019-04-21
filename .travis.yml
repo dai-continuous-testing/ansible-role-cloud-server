@@ -1,10 +1,4 @@
 
-
-# install:
-#     - ./.travis/install.sh
-#     - pip install ansible
-    
-
 sudo: required
 
 matrix:
