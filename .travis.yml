@@ -41,18 +41,15 @@ env:
   - IMAGE_NAME=centos:7 TEST_NAME=01_sanity
 
 services:
-  - docker
+  - postgresql
 
-before_install:
-  - sudo apt-get update
-  - echo 'DOCKER_OPTS="-H tcp://127.0.0.1:2375 -H unix:///var/run/docker.sock -s devicemapper"' | sudo tee /etc/default/docker > /dev/null
-  - sudo service docker restart
-  - sleep 5
-  - sudo docker pull $IMAGE_NAME
+install:
+  - ./.travis/install.sh
+  - pip install ansible
+
+before_script:
+  - psql -c 'create database cloudserver;' -U postgres
 
 script:
- - |
-  sudo docker run \
-    --rm=true \
-    -v `pwd`:/ansible-project:rw $IMAGE_NAME \
-    /bin/bash -c "cd /ansible-project/tests/$TEST_NAME && ./start.sh"
+  - ansible --version
+  - cd $TRAVIS_BUILD_DIR/tests/$TEST_NAME && ./start.sh

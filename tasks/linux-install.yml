@@ -5,7 +5,6 @@
   assert: { that: "{{ item }} != '' " }
   with_items:
   - app_name
-  - temp_folder
   - clear_temp_folder
   - service_name
   - main_class
@@ -14,18 +13,19 @@
   - server_port
   - jmx_port
   - installer_file_name
+  - ansible_user_id
   - s3_download_url
   - launcher_file_name
   - db_connection_string
   - db_username
-  - db_password
+  # - db_password
   - application_properties
   - extra_java_options
 
 # required dependencies
 
 - name: make sure java is installed on the machine
-  win_command: java -version
+  command: java -version
   register: java_test
   ignore_errors: yes
 
@@ -36,137 +36,144 @@
 
 # set temp folder
 
-- name: make sure temp folder exists
-  win_file:
+- name: make sure temp folder
+  file:
     path: "{{ temp_folder }}"
     state: directory
 
 # download the file
 
 - name: download zip from s3 url
-  win_get_url:
+  get_url:
     url: "{{ s3_download_url }}"
-    dest: "{{ temp_folder }}\\{{ installer_file_name }}"
-    force: no
+    dest: "{{ temp_folder }}/{{ installer_file_name }}"
   when: custom_download_url == ""
 
 - name: download zip from custom url
-  win_get_url:
+  get_url:
     url: "{{ custom_download_url }}"
-    dest: "{{ temp_folder }}\\{{ installer_file_name }}"
-    force: no
+    dest: "{{ temp_folder }}/{{ installer_file_name }}"
   when: custom_download_url != ""
 
 # stop old service
 
 - name: stop the old service
-  win_nssm:
+  systemd:
     name: "{{ service_name }}"
-    state: absent
+    state: stopped
+  ignore_errors: yes
   become: yes
 
 # delete old installation (optional)
 
 - name: clear old installation folder
-  win_file: 
+  file: 
     path: "{{ installation_folder }}"
     state: absent
   when: clear_before_install == True
+  notify:
+    - start the service
 
-# unpack all the files to the installation folder
+# unpack and copy all the files to the installation folder
 
 - name: make sure installation folder exists
-  win_file:
+  file:
     path: "{{ installation_folder }}"
     state: directory
+    owner: "{{ ansible_user_id }}"
   become: yes
 
-- name: make sure unzip folder exists
-  win_file:
-    path: "{{ temp_folder }}\\{{ (installer_file_name | splitext)[0] }}"
+- name: make sure unzip folder exist
+  file:
+    path: "{{ temp_folder }}/{{ (installer_file_name | splitext)[0] }}"
     state: directory
+    owner: "{{ ansible_user_id }}"
   become: yes
 
+# REMOVEME ugly hack - remove the sub folder in zip file
 - name: unzip the file
-  win_unzip:
-    src: "{{ temp_folder }}\\{{ installer_file_name }}"
-    dest: "{{ temp_folder }}\\{{ (installer_file_name | splitext)[0] }}"
+  unarchive:
+    src: "{{ temp_folder }}/{{ installer_file_name }}"
+    dest: "{{ temp_folder }}/{{ (installer_file_name | splitext)[0] }}"
     remote_src: yes
-    creates: "{{ temp_folder }}\\{{ (installer_file_name | splitext)[0] }}\\{{ convention }}"
+    creates: "{{ temp_folder }}/{{ (installer_file_name | splitext)[0] }}/{{ convention }}"
+    owner: "{{ ansible_user_id }}"
   become: yes
 
-- name: copy the file to installation folder
-  win_copy:
-    src: "{{ temp_folder }}\\{{ (installer_file_name | splitext)[0] }}\\{{ convention }}\\"
+- name: synchronize zip content to installation folder
+  synchronize:
+    src: "{{ temp_folder }}/{{ (installer_file_name | splitext)[0] }}/{{ convention }}/"
     dest: "{{ installation_folder }}"
-    force: no
-    remote_src: yes
+    recursive: yes
+  delegate_to: "{{ inventory_hostname }}"
+  notify:
+    - start the service
+
+- name: copy service file
+  template:
+    src: systemd.service.j2
+    dest: "/etc/systemd/system/{{ service_name }}.service"
+    owner: root
   become: yes
+  notify:
+    - start the service
 
 - name: copy start script
-  win_template:
-    src: start.bat.j2
-    dest: "{{ installation_folder }}\\{{ launcher_file_name }}"
+  template:
+    src: "{{ ansible_os_family | lower }}-start.sh.j2"
+    dest: "{{ installation_folder }}/{{ launcher_file_name }}"
+    mode: 0755
+    owner: "{{ ansible_user_id }}"
   become: yes
 
 # configure installed 
 
 - name: update application properties file
-  win_lineinfile:
-    path: "{{ installation_folder }}\\conf\\application.properties"
+  lineinfile:
+    path: "{{ installation_folder }}/conf/application.properties"
     line: "{{ item.key }}={{ item.value }}"
     regexp: "^{{ item.key | replace('.', '\\.') }}="
   with_dict: "{{ application_properties }}"
   become: yes
 
 - name: update server port
-  win_lineinfile:
+  lineinfile:
     state: present
-    path: "{{ installation_folder }}\\conf\\cloudserver.conf.xml"
+    path: "{{ installation_folder }}/conf/cloudserver.conf.xml"
     line: "<main-port>{{ server_port }}</main-port>"
     regexp: "<main-port>\\d*<\\/main-port>"
   become: yes
 
 - name: set permissions for logs folder
-  win_file:
-    path: "{{ installation_folder }}\\logs"
+  file:
+    path: "{{ installation_folder }}/logs"
     state: directory
+    mode: 0777
+    owner: "{{ ansible_user_id }}"
   become: yes
 
 # QUESTION should remove pairing key for cloud ?
 
 # - name: reset pairing key
-#   win_file:
-#     path: "{{ installation_folder }}\\conf\\pairing.conf.xml"
+#   file:
+#     path: "{{ installation_folder }}/conf/pairing.conf.xml"
 #     state: absent
 #   become: yes
 
-
 # install hasp
 
-- name: run hasp installer
-  win_command: "{{ installation_folder }}\\bin\\haspdinst.exe -i -fi -criticalmsg"
-  become: yes
-
-# install the service
-
-- name: create the service
-  win_nssm:
-    name: "{{ service_name }}"
-    application: "{{ installation_folder }}\\{{ launcher_file_name }}"
-    stdout_file: "{{ installation_folder }}\\logs\\server.out.log"
-    stderr_file: "{{ installation_folder }}\\logs\\server.err.log"
-    state: present
-  become: yes
-  notify:
-    - start the service
+# QUESTION install hasp in linux ?
+# - name: run hasp installer
+#   command: 'sudo /usr/sbin/installer -allowUntrusted -verboseR -dumplog -pkg "{{ hasp_installer }}" -target /'
+#   become: yes
 
 # clear temp files (optional)
 
 - name: clear temp folder
-  win_file:
+  file:
     path: "{{ temp_folder }}"
     state: absent
+  become: yes
   when: clear_temp_folder == True
 
 # expose role output
@@ -181,5 +188,5 @@
       server_port: "{{ server_port }}"
       jmx_port: "{{ jmx_port }}"
       installation_folder: "{{ installation_folder }}"
-      configuration_file: "{{ installation_folder }}\\conf\\application.properties"
-      configuration_xml_file: "{{ installation_folder }}\\conf\\cloudserver.conf.xml"
+      configuration_file: "{{ installation_folder }}/conf/application.properties"
+      configuration_xml_file: "{{ installation_folder }}/conf/cloudagent.conf.xml"

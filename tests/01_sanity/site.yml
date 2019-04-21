@@ -1,18 +1,4 @@
 
 - hosts: localhost
-  become: yes
-  
-  vars:
-    postgresql_databases:
-      - name: cloudserver
-    postgresql_users:
-      - name: postgres
-        password: supersecure
-  
-  roles:
-    - geerlingguy.postgresql
-
-- hosts: localhost
   roles:
     - name: ansible-role-cloud-server
-      db_password: supersecure

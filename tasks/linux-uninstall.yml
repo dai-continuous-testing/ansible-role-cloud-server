@@ -1,0 +1,33 @@
+
+- name: assert all vars are set
+  assert: { that: "{{ item }} != '' " }
+  with_items:
+  - installation_folder
+  - service_name
+  - temp_folder
+
+- name: stop the service
+  systemd:
+    state: stopped
+    daemon_reload: yes
+    name: "{{ service_name }}"
+    enabled: yes
+  become: yes
+
+- name: remove the service
+  file:
+    path: "/etc/systemd/system/{{ service_name }}.service"
+    state: absent
+  become: yes
+
+- name: remove the application folder
+  file:
+    path: "{{ installation_folder }}"
+    state: absent
+  become: yes
+
+- name: remove temp folder
+  file:
+    path: "{{ temp_folder }}"
+    state: absent
+  when: clear_temp_folder == True
