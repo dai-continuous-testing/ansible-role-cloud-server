@@ -33,6 +33,9 @@ if [ "$TRAVIS_OS_NAME" == "linux" ]; then
 
     sudo pip install requests[security]
 
-    docker run -d -p 5432:5432 -e 'POSTGRES_PASSWORD=secretpassword' -e 'POSTGRES_DB=cloudserver' postgres:10
+    # invoke from this file if using mac os - since it is not available oob to user services: [docker] for mac
+
+    # executed from .travis.yml file
+    # docker run -d -p 5432:5432 -e 'POSTGRES_PASSWORD=secretpassword' -e 'POSTGRES_DB=cloudserver' postgres:10
 
 fi
