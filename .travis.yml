@@ -38,8 +38,7 @@ sudo: required
 language: generic
 
 env:
-  - TEST_NAME=01_sanity
-  - IMAGE_NAME=centos:7
+  - IMAGE_NAME=centos:7 TEST_NAME=01_sanity
 
 services:
   - docker
