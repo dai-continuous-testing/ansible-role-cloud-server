@@ -4,14 +4,13 @@ if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
     echo "osx"
 
     brew cask install docker
-    /Applications/Docker.app/Contents/MacOS/Docker &
+    open --background -a Docker
     
     sudo pip install ansible
 
     DOCKER_BIN=/Applications/Docker.app/Contents/Resources/bin/docker
 
-    while (! $DOCKER_BIN stats --no-stream ); do
-        # Docker takes a few seconds to initialize
+    while (! $DOCKER_BIN system info > /dev/null 2>&1 ); do
         echo "Waiting for Docker to launch..."
         sleep 1
     done
