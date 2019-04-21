@@ -1,4 +1,4 @@
----
+
 - hosts: localhost
   roles:
-  - role: ansible-role-app-signer
+  - role: ansible-role-cloud-server

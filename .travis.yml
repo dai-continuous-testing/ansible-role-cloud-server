@@ -1,55 +1,41 @@
 
-# language: python
-
-# matrix:
-#     include:
-
-#         - os: osx
-#           language: generic
-#           env: TEST_NAME=01_sanity
-
-#         # - os: osx
-#         #   language: generic
-#         #   env: TEST_NAME=02_install_twice
-
-#         # - os: osx
-#         #   language: generic
-#         #   env: TEST_NAME=03_install_uninstall
-
-#         # - os: osx
-#         #   language: generic
-#         #   env: TEST_NAME=04_uninstall
-
-#         # - os: osx
-#         #   language: generic
-#         #   env: TEST_NAME=05_outputs
 
 # install:
 #     - ./.travis/install.sh
 #     - pip install ansible
     
-# script: 
-#   - ansible --version
-#   - cd $TRAVIS_BUILD_DIR/tests/$TEST_NAME && ./start.sh
-
-# cache: pip
 
 sudo: required
-language: generic
-dist: xenial
 
-env:
-  - IMAGE_NAME=centos:7 TEST_NAME=01_sanity
+matrix:
+    include:
+
+        - dist: xenial
+          language: generic
+          env: TEST_NAME=01_sanity
+        
+        - os: osx
+          language: generic
+          env: TEST_NAME=01_sanity
+
+        - dist: xenial
+          language: generic
+          env: TEST_NAME=02_install_twice
+
+        - dist: xenial
+          language: generic
+          env: TEST_NAME=03_install_uninstall
+
+        - dist: xenial
+          language: generic
+          env: TEST_NAME=04_uninstall
+
+        - dist: xenial
+          language: generic
+          env: TEST_NAME=05_outputs
 
 services:
   - postgresql
-
-# addons:
-#   postgresql: "10"
-#   apt:
-#     packages:
-#     - postgresql-10
-#     - postgresql-client-10
 
 install:
   - ./.travis/install.sh
