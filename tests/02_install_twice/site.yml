@@ -2,3 +2,4 @@
 - hosts: localhost
   roles:
   - role: ansible-role-cloud-server
+    db_password: secretpassword

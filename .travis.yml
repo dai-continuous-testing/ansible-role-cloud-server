@@ -35,13 +35,13 @@ matrix:
           env: TEST_NAME=05_outputs
 
 services:
-  - postgresql
+  - docker
 
 install:
   - ./.travis/install.sh
 
 before_script:
-  - psql -c 'create database cloudserver;' -U postgres
+  - docker run -p 5432:5432 -e 'POSTGRES_PASSWORD=secretpassword' -e 'POSTGRES_DB=cloudserver' postgres:10
 
 script:
   - ansible --version

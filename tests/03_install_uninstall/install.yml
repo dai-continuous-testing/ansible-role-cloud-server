@@ -4,4 +4,5 @@
   
   roles:
   - role: ansible-role-cloud-server
+    db_password: secretpassword
     state: present
