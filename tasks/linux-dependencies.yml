@@ -4,6 +4,11 @@
     name: rsync
     state: present
 
+- name: make sure unzip is installed
+  package:
+    name: unzip
+    state: present
+
 - name: make sure java8 is installed
   package:
     name: java-1.8.0-openjdk-devel
