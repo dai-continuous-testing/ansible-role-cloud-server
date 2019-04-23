@@ -15,6 +15,8 @@ db_connection_string: "jdbc:postgresql://localhost:5432/cloudserver"
 db_username: postgres
 db_password: ""
 
+# 
+
 base_application_properties:
   - "server.port": "{{ server_port }}"
   - "spring.datasource.url": "{{ db_connection_string }}"
@@ -25,6 +27,17 @@ base_application_properties:
 extra_application_properties: {}
 
 application_properties: "{{ base_application_properties | combine(extra_application_properties) }}"
+
+# 
+
+base_xml_conf:
+  - "main-port": "{{ server_port }}"
+
+extra_xml_conf: {}
+
+xml_conf: "{{ base_xml_conf | combine(extra_xml_conf) }}"
+
+#
 
 start_after_install: True
 

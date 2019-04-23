@@ -18,8 +18,9 @@
   - launcher_file_name
   - db_connection_string
   - db_username
-  - db_password
+  # - db_password
   - application_properties
+  - xml_conf
   - extra_java_options
 
 # required dependencies
@@ -119,12 +120,14 @@
   with_dict: "{{ application_properties }}"
   become: yes
 
-- name: update server port
+- name: update xml conf
   win_lineinfile:
     state: present
-    path: "{{ installation_folder }}\\conf\\cloudserver.conf.xml"
-    line: "<main-port>{{ server_port }}</main-port>"
-    regexp: "<main-port>\\d*<\\/main-port>"
+    path: "{{ installation_folder }}/conf/cloudserver.conf.xml"
+    line: "<{{ item.key }}>{{ item.value }}</{{ item.key }}>"
+    regexp: "<{{ item.key }}>.*<\\/{{ item.key }}>"
+    insertbefore:  "<\\/forwarder-configuration>"
+  with_dict: "{{ xml_conf }}"
   become: yes
 
 - name: set permissions for logs folder
