@@ -3,9 +3,12 @@
 
   pre_tasks:
     
-    # example for java installation
-    - win_chocolatey: name=jdk8
+    - name: make sure java8 is installed
+      win_chocolatey: name=jdk8
       when: ansible_os_family == "Windows"
 
   roles:
     - role: cloud-server
+      db_connection_string: jdbc://postgres:5432/cloudserver
+      db_username: postgres
+      db_password: mysupersecurepassword
