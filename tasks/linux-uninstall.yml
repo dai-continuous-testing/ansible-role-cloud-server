@@ -33,4 +33,4 @@
   file:
     path: "{{ temp_folder }}"
     state: absent
-  when: clear_temp_folder == True
+  when: clear_temp_folder | default('no') | bool
