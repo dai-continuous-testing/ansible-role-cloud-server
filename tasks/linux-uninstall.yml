@@ -6,12 +6,15 @@
   - service_name
   - temp_folder
 
+- name: gather installed services
+  service_facts:
+
 - name: stop the service
-  systemd:
-    state: stopped
-    daemon_reload: yes
+  service:
     name: "{{ service_name }}"
-    enabled: yes
+    state: stopped
+    enabled: no
+  when: "service_name in services"
   become: yes
 
 - name: remove the service

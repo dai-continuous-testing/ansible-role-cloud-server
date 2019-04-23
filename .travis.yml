@@ -1,0 +1,42 @@
+
+sudo: required
+
+matrix:
+    include:
+
+        - dist: xenial
+          language: generic
+          env: TEST_NAME=01_sanity
+        
+        # - os: osx
+        #   language: generic
+        #   env: TEST_NAME=01_sanity
+
+        - dist: xenial
+          language: generic
+          env: TEST_NAME=02_install_twice
+
+        - dist: xenial
+          language: generic
+          env: TEST_NAME=03_install_uninstall
+
+        - dist: xenial
+          language: generic
+          env: TEST_NAME=04_uninstall
+
+        - dist: xenial
+          language: generic
+          env: TEST_NAME=05_outputs
+
+services:
+  - docker
+
+install:
+  - ./.travis/install.sh
+
+before_script:
+  - docker run -d -p 5432:5432 -e 'POSTGRES_PASSWORD=secretpassword' -e 'POSTGRES_DB=cloudserver' postgres:10
+
+script:
+  - ansible --version
+  - cd $TRAVIS_BUILD_DIR/tests/$TEST_NAME && ./start.sh

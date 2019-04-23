@@ -24,20 +24,6 @@
 
 # required dependencies
 
-- name: install Chocolatey
-  win_chocolatey:
-    name: chocolatey
-    state: latest
-
-- name: disable enhanced exit codes
-  win_chocolatey_feature:
-    name: useEnhancedExitCodes
-    state: disabled
-
-- name: install nssm dependency
-  win_chocolatey:
-    name: nssm
-
 - name: make sure java is installed on the machine
   win_command: java -version
   register: java_test

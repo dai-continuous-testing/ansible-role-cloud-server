@@ -1,0 +1,21 @@
+---
+
+- hosts: localhost
+  roles:
+    - role: ansible-role-cloud-server
+      db_password: secretpassword
+
+  tasks:
+
+    - name: print var value
+      debug: var=ansible_role_cloud_server
+      ignore_errors: yes
+
+    - name: verify output exists
+      assert: 
+        that: 
+          - "ansible_role_cloud_server is defined"
+          - "ansible_role_cloud_server.server_port is defined"
+          - "ansible_role_cloud_server.jmx_port is defined"
+          - "ansible_role_cloud_server.installation_folder is defined"
+          - "ansible_role_cloud_server.configuration_file is defined"

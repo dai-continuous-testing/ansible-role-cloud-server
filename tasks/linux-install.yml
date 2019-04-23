@@ -18,7 +18,7 @@
   - launcher_file_name
   - db_connection_string
   - db_username
-  - db_password
+  # - db_password
   - application_properties
   - extra_java_options
 
@@ -33,17 +33,6 @@
   fail:
     msg: java must be accesible in path
   when: java_test.rc != 0
-
-- name: make sure rsync is installed
-  yum:
-    name: rsync
-    state: present
-
-- name: make sure java8 is installed
-  yum:
-    name: java-1.8.0-openjdk-devel
-    state: present
-  when: install_java | default(false)
 
 # set temp folder
 
@@ -131,7 +120,7 @@
 
 - name: copy start script
   template:
-    src: "{{ ansible_os_family | lower }}-start.sh.j2"
+    src: "{{ ansible_os_family | os_family_to_os_type }}-start.sh.j2"
     dest: "{{ installation_folder }}/{{ launcher_file_name }}"
     mode: 0755
     owner: "{{ ansible_user_id }}"
