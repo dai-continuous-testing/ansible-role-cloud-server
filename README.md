@@ -1,6 +1,8 @@
 Experitest - Cloud Server ansible role
 =========
 
+[![Build Status](https://travis-ci.org/ExperitestOfficial/ansible-role-cloud-server.svg)](https://travis-ci.org/ExperitestOfficial/ansible-role-cloud-server)
+
 This role will install \ uninstall cloud server for windows and mac os hosts
 
 Requirements
