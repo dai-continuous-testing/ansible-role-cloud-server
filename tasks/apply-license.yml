@@ -1,0 +1,104 @@
+
+# validation
+
+- name: assert valid options
+  fail:
+    msg: license type is not valid
+  when: __license_type not in __license_valid_options
+
+- name: assert valid license4j_file_content (license4j)
+  fail:
+    msg: license4j_file_content is required for license type license4j
+  when: 
+    - __license_type == "license4j"
+    - license4j_file_content == ''
+
+# apply
+
+- name: apply license4j license (win)
+  block:
+    
+    # remove key from conf file trial-license-key
+    - name: remove trial key from conf file
+      win_lineinfile:
+        state: absent
+        path: "{{ installation_folder }}\\conf\\cloudserver.conf.xml }}"
+        regexp: "<trial-license-key>.*<\\/trial-license-key>"
+      become: yes
+
+    # copy content of license to file
+    - name: copy license to remote
+      win_copy:
+        content: "{{ license4j_file_content }}"
+        dest: "{{ installation_folder }}\\conf\\l4jlicense.txt"
+      become: yes
+
+  when: 
+    - __license_type == "license4j"
+    - ansible_os_family == "Windows"
+
+- name: apply license4j license (non win)
+  block:
+
+    # remove key from conf file trial-license-key
+    - name: remove trial key from conf file
+      lineinfile:
+        state: absent
+        path: "{{ installation_folder }}/conf/cloudserver.conf.xml }}"
+        regexp: "<trial-license-key>.*<\\/trial-license-key>"
+      become: yes
+
+    # copy content of license to file
+    - name: copy licese to remote
+      copy:
+        content: "{{ license4j_file_content }}"
+        dest: "{{ installation_folder }}/conf/l4jlicense.txt"
+      become: yes
+
+  when: 
+    - __license_type == "license4j"
+    - ansible_os_family != "Windows"
+
+- name: apply sentinel license (win)
+  block:
+    
+    # remove key from conf file trial-license-key
+    - name: remove trial key from conf file
+      win_lineinfile:
+        state: absent
+        path: "{{ installation_folder }}\\conf\\cloudserver.conf.xml }}"
+        regexp: "<trial-license-key>.*<\\/trial-license-key>"
+      become: yes
+
+    # remove licese 4j file
+    - name: copy licese to remote
+      win_file:
+        path: "{{ installation_folder }}\\conf\\l4jlicense.txt"
+        state: absent
+      become: yes
+
+  when: 
+    - ansible_os_family == "Windows"
+    - __license_type == "sentinel"
+
+- name: apply sentinel license (non win)
+  block:
+
+    # remove key from conf file trial-license-key
+    - name: remove trial key from conf file
+      lineinfile:
+        state: absent
+        path: "{{ installation_folder }}/conf/cloudserver.conf.xml }}"
+        regexp: "<trial-license-key>.*<\\/trial-license-key>"
+      become: yes
+
+    # remove licese 4j file
+    - name: copy licese to remote
+      file:
+        path: "{{ installation_folder }}/conf/l4jlicense.txt"
+        state: absent
+      become: yes
+
+  when: 
+    - ansible_os_family != "Windows"
+    - __license_type == "sentinel"

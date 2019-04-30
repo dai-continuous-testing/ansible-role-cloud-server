@@ -22,6 +22,8 @@ Role Variables
 | extra_application_properties | additional props to be override in application.properties file | dict | {} | no |
 | extra_xml_conf | extand xml configuration | dict | {} | no |
 | extra_java_options | extand java options | array of strings | [] | no |
+| license_type | license type | trial \ sentinel \ license4j | trial | no |
+| license4j_file_content | license file content | string |  | when license_type is license4j |
 | db_connection_string | connection string to postgres | string | jdbc:postgresql://localhost:5432/cloudserver | no |
 | db_username | username for db connection | string | postgres | no |
 | db_password | password for db connection | string |  | no |
