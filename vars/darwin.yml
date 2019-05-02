@@ -1,6 +1,6 @@
 ---
 
-installation_root_folder: "{{ ansible_user_dir }}/experitest"
+installation_root_folder: "/Applications/Experitest"
 installation_folder: "{{ installation_root_folder }}/{{ app_name }}-{{ app_version }}"
 
 temp_folder: "/tmp/experitest"
