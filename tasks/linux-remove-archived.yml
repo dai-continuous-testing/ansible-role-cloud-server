@@ -1,0 +1,63 @@
+
+# validation
+
+- name: assert all vars are set
+  assert: { that: "{{ item }} != '' " }
+  with_items:
+  - installation_root_folder
+  - app_name
+  - app_version
+
+# 
+
+- name: test for previous installation version
+  stat:
+    path: "{{ installation_root_folder }}/{{ app_name }}-previous"
+  register: previous_exists
+
+- name: load previous_version from remote file
+  slurp:
+    src: "{{ installation_root_folder }}/{{ app_name }}-previous"
+  register: previous_file
+  when: 
+    - previous_exists.stat.exists
+
+- name: set previous_version from remote file
+  set_fact:
+    previous_version: "{{ previous_file['content'] | b64decode }}"
+  when: 
+    - previous_exists.stat.exists
+
+- name: test for current installation version
+  stat:
+    path: "{{ installation_root_folder }}/{{ app_name }}-current"
+  register: current_exists
+
+- name: load current_version from remote file
+  slurp:
+    src: "{{ installation_root_folder }}/{{ app_name }}-current"
+  register: current_file
+  when: 
+    - current_exists.stat.exists
+
+- name: set current_version from remote file
+  set_fact:
+    current_version: "{{ current_file['content'] | b64decode }}"
+  when: 
+    - current_exists.stat.exists
+
+- name: find old versions
+  find:
+    path: "{{ installation_root_folder }}"
+    pattern: "{{ app_name }}-*"
+    file_type: directory
+    excludes:
+      - "{{ app_name }}-{{ previous_version | default('invalid-version') }}"
+      - "{{ app_name }}-{{ current_version | default('invalid-version') }}"
+  register: old_versions
+
+- name: remove old versions
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: "{{ old_versions.files }}"

@@ -15,6 +15,14 @@
   include_tasks: "tasks/apply-license.yml"
   when: state|default('present') == 'present'
 
+- name: track versions
+  include_tasks: "tasks/{{ ansible_os_family | os_family_to_os_type }}-track-versions.yml"
+  when: state|default('present') == 'present'
+
+- name: remove archived versions
+  include_tasks: "tasks/{{ ansible_os_family | os_family_to_os_type }}-remove-archived.yml"
+  when: state|default('present') == 'present'
+
 - name: uninstall
   include_tasks: "tasks/{{ ansible_os_family | os_family_to_os_type }}-uninstall.yml"
   when: state|default('present') == 'absent'

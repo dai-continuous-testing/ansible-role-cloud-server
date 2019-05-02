@@ -2,7 +2,7 @@
 - name: assert all vars are set
   assert: { that: "{{ item }} != '' " }
   with_items:
-  - installation_folder
+  - installation_root_folder
   - service_name
   - temp_folder
 
@@ -23,14 +23,29 @@
     state: absent
   become: yes
 
-- name: remove the application folder
-  file:
-    path: "{{ installation_folder }}"
-    state: absent
-  become: yes
-
 - name: remove temp folder
   file:
     path: "{{ temp_folder }}"
     state: absent
   when: clear_temp_folder | default('no') | bool
+
+- name: remove tracking files
+  file: 
+    path: "{{ installation_root_folder }}/{{ item }}"
+    state: absent
+  with_items:
+    - "{{ app_name }}-previous"
+    - "{{ app_name }}-current"
+
+- name: find app versions
+  find:
+    path: "{{ installation_root_folder }}"
+    pattern: "{{ app_name }}-*"
+    file_type: directory
+  register: application_versions
+
+- name: remove application versions
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: "{{ application_versions.files }}"
