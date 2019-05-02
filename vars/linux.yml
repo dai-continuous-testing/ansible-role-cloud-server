@@ -1,6 +1,7 @@
 ---
 
-installation_folder: "/opt/experitest/{{ app_name }}-{{ app_version }}"
+installation_root_folder: "/opt/experitest"
+installation_folder: "{{ installation_root_folder }}/{{ app_name }}-{{ app_version }}"
 
 # https://superuser.com/questions/332610/where-is-the-temporary-directory-in-linux
 # /tmp      - temp folder
