@@ -36,8 +36,10 @@
   when: 
     - current_exists.stat.exists
     - current_file['content']|b64decode != app_version
+  become: yes
 
 - name: update current version with new version
   copy: 
     dest: "{{ installation_root_folder }}/{{ app_name }}-current"
     content: "{{ app_version }}"
+  become: yes

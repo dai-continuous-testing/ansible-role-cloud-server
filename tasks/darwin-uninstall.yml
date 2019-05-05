@@ -21,6 +21,7 @@
     path: "{{ temp_folder }}"
     state: absent
   when: clear_temp_folder | default('no') | bool
+  become: yes
 
 - name: remove tracking files
   file: 
@@ -29,6 +30,7 @@
   with_items:
     - "{{ app_name }}-previous"
     - "{{ app_name }}-current"
+  become: yes
 
 - name: find app versions
   find:
@@ -42,3 +44,4 @@
     path: "{{ item.path }}"
     state: absent
   with_items: "{{ application_versions.files }}"
+  become: yes

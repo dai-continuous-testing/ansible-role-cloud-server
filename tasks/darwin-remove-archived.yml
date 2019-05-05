@@ -61,3 +61,4 @@
     path: "{{ item.path }}"
     state: absent
   with_items: "{{ old_versions.files }}"
+  become: yes
