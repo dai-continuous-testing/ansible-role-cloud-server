@@ -15,6 +15,34 @@
 
 # apply
 
+- name: apply trial license (win)
+  block:
+    
+   # remove licese 4j file
+    - name: copy licese to remote
+      win_file:
+        path: "{{ installation_folder }}\\conf\\l4jlicense.txt"
+        state: absent
+      become: yes
+
+  when: 
+    - __license_type == "trial"
+    - ansible_os_family == "Windows"
+
+- name: apply trial license (non win)
+  block:
+
+   # remove licese 4j file
+    - name: copy licese to remote
+      file:
+        path: "{{ installation_folder }}/conf/l4jlicense.txt"
+        state: absent
+      become: yes
+
+  when: 
+    - __license_type == "trial"
+    - ansible_os_family != "Windows"
+
 - name: apply license4j license (win)
   block:
     
