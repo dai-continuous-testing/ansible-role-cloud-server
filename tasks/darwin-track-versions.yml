@@ -23,19 +23,19 @@
   when: 
     - current_exists.stat.exists
 
-- name: set current_version from remote file
-  set_fact:
-    current_version: "{{ current_file['content'] | b64decode }}"
-  when: 
-    - current_exists.stat.exists
+# - name: set current_version from remote file
+#   set_fact:
+#     current_version: "{{ current_file['content'] | b64decode }}"
+#   when: 
+#     - current_exists.stat.exists
 
 - name: move current to be previous
   copy: 
     dest: "{{ installation_root_folder }}/{{ app_name }}-previous"
-    content: "{{ current_version }}"
+    content: "{{ current_file['content']|b64decode }}"
   when: 
     - current_exists.stat.exists
-    - "'{{ current_version }}' != '{{ app_version }}'"
+    - current_file['content']|b64decode != app_version
 
 - name: update current version with new version
   copy: 
