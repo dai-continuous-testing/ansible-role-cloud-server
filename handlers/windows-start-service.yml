@@ -24,3 +24,8 @@
   fail: 
     msg: service start failed
   when: winsvc_state.failed
+
+- name: wait for service to start
+  health_check:
+    url: "http://localhost:{{ health_check_port | default(server_port) }}{{ health_check_uri | default('/manage/health') }}"
+    expected_status: "{{ health_check_status | default('200') }}"

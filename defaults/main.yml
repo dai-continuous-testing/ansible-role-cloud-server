@@ -60,3 +60,7 @@ custom_download_url: ""
 
 cdn_name: "devops-artifacts.experitest.com"
 s3_download_url: "https://{{ cdn_name }}/{{ relative_path }}/{{ installer_file_name }}"
+
+# 
+
+health_check_port: 33300
