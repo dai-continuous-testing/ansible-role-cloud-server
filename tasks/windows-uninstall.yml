@@ -4,6 +4,7 @@
   with_items:
   - service_name
   - installation_root_folder
+  - installation_folder
   - temp_folder
 
 - name: stop the old service
@@ -11,6 +12,12 @@
     name: "{{ service_name }}"
     state: absent
   become: yes
+
+# uninstall hasp
+- name: remove hasp installation
+  win_command: '"{{ installation_folder }}\\bin\\haspdinst.exe" -r -fr -criticalmsg'
+  become: yes
+  ignore_errors: yes
 
 - name: remove temp folder
   win_file:
@@ -39,8 +46,3 @@
   with_items: "{{ application_versions.files }}"
   when: 
     - item.path | win_basename | regex_search("{{ app_name }}-")
-
-# uninstall hasp
-- name: remove hasp installation
-  win_command: '"{{ installation_folder }}\\bin\\haspdinst.exe" -r -fr -criticalmsg'
-  become: yes
