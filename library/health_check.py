@@ -1,52 +1,86 @@
 #!/usr/bin/python
 
-import re
 import time
-import urllib.error
-import urllib.request
 import socket
+
+try:
+    # python3
+    import urllib.request as urllib_request
+    import urllib.error as urllib_error
+except ImportError:
+    # python2
+    import urllib2 as urllib_request
+    import urllib2 as urllib_error
 
 from ansible.module_utils.basic import AnsibleModule
 
 def check_server_status(url, headers, expected_status, timeout, expected_regexp):
+
     try:
-        req = urllib.request.Request(url, headers=headers)
-        resp = urllib.request.urlopen(req, timeout=timeout)
-    
-    except urllib.error.HTTPError as e:
-        
+        req = urllib_request.Request(url, headers=headers)
+        resp = urllib_request.urlopen(req, timeout=timeout)
+
+    except urllib_error.HTTPError as e:
         if e.code == expected_status:
-            return True, 'OK'
+            return {
+                "msg": "OK",
+                "success": True,
+                "url": url,
+                "expected_status": expected_status,
+                "actual_status": e.code
+            }
+
         else:
-            return False, 'Expected status %d, actual: %d' % (
-                expected_status, resp.getcode())
-        
-    except (urllib.error.URLError, socket.error) as e:
-        return False, str(e)
+            return {
+                "msg": 'Expected status %d, actual: %d' % (expected_status, e.code),
+                "success": False,
+                "url": url,
+                "expected_status": expected_status,
+                "actual_status": e.code
+            }
+
+    except (urllib_error.URLError, socket.error) as e:
+        return {
+            "msg": 'URLError: %s' % str(e),
+            "success": False,
+            "url": url,
+            "expected_status": expected_status
+        }
 
     if resp.getcode() != expected_status:
-        return False, 'Expected status %d, actual: %d' % (
-            expected_status, resp.getcode())
+        return {
+            "msg": 'Expected status %d, actual: %d' % (expected_status, resp.getcode()),
+            "success": False,
+            "url": url,
+            "expected_status": expected_status,
+            "actual_status": resp.getcode()
+        }
 
-    content = resp.read()
-    resp.close()
+    try:
+        content = resp.read()
+    except:
+        content = ""
 
-    if expected_regexp and not re.match(expected_regexp, content):
-        return False, 'Content did not match expected regexp.'
-
-    return True, 'OK'
+    return {
+        "msg": "OK",
+        "success": True,
+        "url": url,
+        "expected_status": expected_status,
+        "actual_status": resp.getcode(),
+        "content": content
+    }
 
 def main():
     
     module_args = dict(
-        url = dict(required=True),
-        headers = dict(required=False, type='dict', default=None),
-        initial_delay = dict(required=False, type='int', default=0),
-        delay_between_tries = dict(required=False, type='int', default=5),
-        max_retries = dict(required=False, type='int', default=10),
-        timeout = dict(request=False, type='int', default=10),
-        expected_status = dict(request=False, type='int', default=200),
-        expected_regexp = dict(request=False, default=None)
+        url=dict(required=True, type='str'),
+        headers=dict(required=False, type='dict', default=None),
+        initial_delay=dict(required=False, type='int', default=0),
+        delay_between_tries=dict(required=False, type='int', default=5),
+        max_retries=dict(required=False, type='int', default=10),
+        timeout=dict(request=False, type='int', default=10),
+        expected_status=dict(request=False, type='int', default=200),
+        expected_regexp=dict(request=False, default=None)
     )
     
     module = AnsibleModule(
@@ -69,18 +103,18 @@ def main():
         if attempt != 0:
             time.sleep(delay_between_tries)
         
-        success, info = check_server_status(
+        result = check_server_status(
                 url=url, 
                 headers=headers, 
                 timeout=timeout,
                 expected_status=expected_status,
                 expected_regexp=expected_regexp)
         
-        if success:
+        if result["success"]:
             module.exit_json(failed_attempts=attempt)
     
     else:
-        module.fail_json(msg='Maximum attempts reached: ' + info,
+        module.fail_json(msg='Maximum attempts reached: ' + result["msg"],
                          failed_attempts=attempt)
 
 if __name__ == '__main__':
