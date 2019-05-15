@@ -21,15 +21,25 @@ $delay_between_tries = Get-AnsibleParam -obj $params -name "delay_between_tries"
 
 Function Request-Url($url, $timeout, $expected_status) {
 
-    $response = try { 
-        Invoke-WebRequest `
+    try { 
+        $response = Invoke-WebRequest `
             -Uri $url `
             -ErrorAction Stop `
             -UseBasicParsing `
             -Method 'GET' `
             -TimeoutSec $timeout
     } catch [System.Net.WebException] { 
-    }    
+        # Write-Debug $_
+        $response = $_.Exception.Response
+        $the_error = $_.Exception.Message
+    }
+    
+    if (!$response) {
+        return @{
+            msg = "Error is $($the_error)"
+            success = $false
+        }
+    }
 
     if ($response.StatusCode -eq $expected_status) {
         return @{
@@ -39,7 +49,7 @@ Function Request-Url($url, $timeout, $expected_status) {
     } 
     else {
         return @{
-            msg = "Result is $($response.StatusCode)"
+            msg = "Result is $($response.StatusCode.value__), Error is $($the_error)"
             success = $false
         }
     }
