@@ -29,11 +29,13 @@
   package:
     name: rsync
     state: present
+  become: yes
 
 - name: make sure unzip is installed
   package:
     name: unzip
     state: present
+  become: yes
 
 - name: make sure java is installed on the machine
   command: java -version
