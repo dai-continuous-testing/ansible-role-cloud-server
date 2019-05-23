@@ -62,6 +62,7 @@
   win_get_url:
     url: "{{ s3_download_url }}"
     dest: "{{ temp_folder }}\\{{ installer_file_name }}"
+    timeout: "{{ download_timeout | default(60) }}"
     force: no
   when: custom_download_url == ""
 
@@ -69,6 +70,7 @@
   win_get_url:
     url: "{{ custom_download_url }}"
     dest: "{{ temp_folder }}\\{{ installer_file_name }}"
+    timeout: "{{ download_timeout | default(60) }}"
     force: no
   when: custom_download_url != ""
 
