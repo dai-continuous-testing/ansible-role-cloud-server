@@ -1,7 +1,7 @@
 ---
 
 app_name: cloudserver
-app_version: 12.5.5898
+app_version: 12.5.6036
 
 service_name: "com.experitest.{{ app_name }}"
 main_class: "com.experitest.cloudserver.CloudServerMain"
