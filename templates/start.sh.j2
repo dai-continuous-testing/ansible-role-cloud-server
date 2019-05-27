@@ -15,6 +15,7 @@ $JAVA_BIN -cp ".:lib/*" \
     -Xmx2048m \
     -XX:+HeapDumpOnOutOfMemoryError \
     -XX:HeapDumpPath=./logs \
+    -Dfile.encoding=UTF8 \
     -XX:NativeMemoryTracking=detail \
     -XX:+UnlockDiagnosticVMOptions \
     -XX:+PrintNMTStatistics \
