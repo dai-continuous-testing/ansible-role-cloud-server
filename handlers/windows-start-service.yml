@@ -1,11 +1,8 @@
 
 - name: start the service (windows)
-  win_nssm: 
+  win_service: 
     name: "{{ service_name }}"
-    application: "{{ installation_folder }}\\{{ launcher_file_name }}"
-    stdout_file: "{{ installation_folder }}\\logs\\server.out.log"
-    stderr_file: "{{ installation_folder }}\\logs\\server.err.log"
-    state: restarted
+    state: started
   register: winsvc_state
   ignore_errors: True    
   become: yes
