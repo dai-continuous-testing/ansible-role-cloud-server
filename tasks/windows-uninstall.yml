@@ -34,15 +34,15 @@
     - "{{ app_name }}-current"
 
 - name: find app versions
-  win_find:
-    paths: "{{ installation_root_folder }}"
-    file_type: directory
+  win_shell: |
+    Get-ChildItem -Path {{ installation_root_folder }}\{{ app_name }}-* -Directory -Name
   register: application_versions
+  changed_when: no
 
 - name: remove application versions
   win_file:
-    path: "{{ item.path }}"
+    path: "{{ installation_root_folder }}\\{{ item }}"
     state: absent
-  with_items: "{{ application_versions.files }}"
+  with_items: "{{ application_versions.stdout_lines }}"
   when: 
-    - item.path | win_basename | regex_search("{{ app_name }}-")
+    - item | regex_search("{{ app_name }}-")
