@@ -1,26 +1,35 @@
 ---
 
+required_modifiable_fields:
+  - app_version
+  - server_port
+  - jmx_port
+  - installation_folder
+  - db_connection_string
+  - db_username
+  - db_password
+
 app_name: cloudserver
-app_version: 12.5.6036
+__app_version: 12.5.6036
 
 service_name: "com.experitest.{{ app_name }}"
 main_class: "com.experitest.cloudserver.CloudServerMain"
 
-server_port: 8080
-jmx_port: 51234
+__server_port: 8080
+__jmx_port: 51234
 
 extra_java_options: []
 
-db_connection_string: "jdbc:postgresql://localhost:5432/cloudserver"
-db_username: postgres
-db_password: ""
+__db_connection_string: "jdbc:postgresql://localhost:5432/cloudserver"
+__db_username: postgres
+__db_password: ""
 
 # 
 
 base_application_properties:
   - "server.port": "{{ server_port }}"
   - "spring.datasource.url": "{{ db_connection_string }}"
-  - "spring.datasource.username": "{{ db_username | default('postgres') }}"
+  - "spring.datasource.username": "{{ db_username }}"
   - "spring.datasource.password": "{{ db_password }}"   
   - "spring.datasource.driver-class-name": "org.postgresql.Driver"
 
