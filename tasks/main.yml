@@ -3,6 +3,9 @@
 - name: validate vars
   include_tasks: tasks/variables.yml
 
+- name: backup
+  include_tasks: "tasks/{{ ansible_os_family | os_family_to_os_type }}-backup.yml"
+
 - name: install
   include_tasks: "tasks/{{ ansible_os_family | os_family_to_os_type }}-install.yml"
   when: state|default('present') == 'present'

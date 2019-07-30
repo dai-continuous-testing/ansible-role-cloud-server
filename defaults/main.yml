@@ -8,6 +8,7 @@ required_modifiable_fields:
   - db_connection_string
   - db_username
   - db_password
+  - cloud_backup_dir
 
 app_name: cloudserver
 __app_version: 12.7.6640
@@ -23,6 +24,8 @@ extra_java_options: []
 __db_connection_string: "jdbc:postgresql://localhost:5432/cloudserver"
 __db_username: postgres
 __db_password: ""
+
+
 
 # 
 
@@ -41,6 +44,7 @@ application_properties: "{{ base_application_properties | combine(extra_applicat
 
 base_xml_conf:
   - "main-port": "{{ server_port }}"
+  - "cloud-backup-base-dir": "{{ cloud_backup_dir }}"
 
 extra_xml_conf: {}
 
