@@ -50,11 +50,13 @@
   file:
     path: "{{ temp_folder }}"
     state: directory
+  become: yes
 
 - name: make sure backup directory exists
   file:
     path: "{{ backups_before_upgrade_dir }}"
     state: directory
+  become: yes
 
 
 # backup database before upgrade
