@@ -27,12 +27,13 @@ Role Variables
 | db_connection_string | connection string to postgres | string | jdbc:postgresql://localhost:5432/cloudserver | no |
 | db_username | username for db connection | string | postgres | no |
 | db_password | password for db connection | string |  | no |
-| installation_folder | the folder in which the applction will be installed | string | for mac: /Applications/Experitest/cloud-server-version <br> for windows: C:\\Experitest\\cloud-server-version  | no |
+| installation_folder | the folder in which the applcation will be installed | string | for mac: /Applications/Experitest/cloud-server-version <br> for windows: C:\\Experitest\\cloud-server-version  | no |
 | jmx_port | port number for jmx inspection | number | 51234 | no |
 | custom_download_url | custom url to download the installation from (zip format) | string |  | no |
 | start_after_install | should application start after installation is completed | boolean | True | no |
 | clear_temp_folder | remove temp folder after installation | boolean | False | no |
 | clear_before_install | removing old installation before installing new version | boolean | False | no |
+| cloud_backup_dir | the default path for the cloud backups | string | for mac: /Library/Application Support/Experitest/cloud-server/backups <br> for windows: C:\\ProgramData\\cloud-server\\backups  | no |
 
 Example Playbook
 ----------------
