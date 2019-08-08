@@ -1,4 +1,12 @@
 
+# set postgres path
+
+- name: set postgres path
+  set_fact:
+    postgres_path: "{{ item.value }}"
+  with_dict: "{{ extra_application_properties }}"
+  when: "item.key == 'postgres.install.path'"
+
 # validation
 
 - name: assert all vars are set
@@ -9,6 +17,7 @@
   # - db_password
   - temp_folder
   - cloud_backup_dir
+  - postgres_path
 
 # set required variables
 
@@ -24,12 +33,12 @@
 # required dependencies
 
 - name: make sure psql is installed on the machine
-  win_command: psql --version
+  win_command: "{{ postgres_path }}\\bin\\psql.exe --version"
   register: psql_test
   ignore_errors: yes
    
 - name: make sure pg_dump is installed on the machine
-  win_command: pg_dump --version
+  win_command: "{{ postgres_path }}\\bin\\pg_dump.exe --version"
   register: pg_dump_test
   ignore_errors: yes
 
@@ -62,7 +71,7 @@
 - name: backup database before upgrade / install
   block:
     - name: check postgresql is recheable
-      win_command: c:\windows\system32\cmd.exe /C "set PGPASSWORD={{ db_password }}&& psql -h {{ db_host }} -U {{ db_username }} -p {{ db_port }} -l"
+      win_command: c:\windows\system32\cmd.exe /C "set PGPASSWORD={{ db_password }}&& {{ postgres_path }}\\bin\\psql.exe -h {{ db_host }} -U {{ db_username }} -p {{ db_port }} -l"
       register: check_dbname
 
     - name: if db not exist - write sql file to create database
@@ -72,11 +81,11 @@
       when: "db_name not in check_dbname.stdout"  
     
     - name: "if db not exist - create empty {{ db_name }} database"
-      win_command: c:\windows\system32\cmd.exe /C "set PGPASSWORD={{ db_password }}&& psql -h {{ db_host }} -p {{ db_port }} -U {{ db_username }} -f {{ temp_folder }}\\{{ db_name }}.sql"
+      win_command: c:\windows\system32\cmd.exe /C "set PGPASSWORD={{ db_password }}&& {{ postgres_path }}\\bin\\psql.exe -h {{ db_host }} -p {{ db_port }} -U {{ db_username }} -f {{ temp_folder }}\\{{ db_name }}.sql"
       when: "db_name not in check_dbname.stdout"
 
     - name: run cloudserver database backup
-      win_command: c:\windows\system32\cmd.exe /C "set PGPASSWORD={{ db_password }}&& pg_dump.exe -h {{ db_host }} -p {{ db_port }} -U {{ db_username }} -w -Fc {{ db_name }} > {{ backups_before_upgrade_dir }}\\{{ timestamp }}-{{ db_name }}.dump"
+      win_command: c:\windows\system32\cmd.exe /C "set PGPASSWORD={{ db_password }}&& {{ postgres_path }}\\bin\\pg_dump.exe -h {{ db_host }} -p {{ db_port }} -U {{ db_username }} -w -Fc {{ db_name }} > {{ backups_before_upgrade_dir }}\\{{ timestamp }}-{{ db_name }}.dump"
       when: "db_name in check_dbname.stdout" 
       
   when: psql_test.rc == 0 and pg_dump_test.rc == 0
