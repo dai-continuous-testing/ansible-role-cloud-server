@@ -44,12 +44,12 @@
 
 - name: fail if psql is not found
   fail:
-    msg: "psql must be accesible in path {{ postgres_install_path }}/bin"
+    msg: "psql not found in path {{ postgres_install_path }}/bin"
   when: psql_test.rc != 0
 
 - name: fail if pg_dump is not found
   fail:
-    msg: "pg_dump must be accesible in path {{ postgres_install_path }}/bin"
+    msg: "pg_dump not found in path {{ postgres_install_path }}/bin"
   when: pg_dump_test.rc != 0    
 
 
