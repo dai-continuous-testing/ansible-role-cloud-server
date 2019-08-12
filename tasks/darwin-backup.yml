@@ -33,12 +33,16 @@
 # required dependencies
 
 - name: make sure psql is installed on the machine
-  command: "{{ postgres_install_path }}/bin/psql --version"
+  command: "./psql --version"
+  args:
+    chdir: "{{ postgres_install_path }}/bin"
   register: psql_test
   ignore_errors: yes
    
 - name: make sure pg_dump is installed on the machine
-  command: "{{ postgres_install_path }}/bin/pg_dump --version"
+  command: "./pg_dump --version"
+  args:
+    chdir: "{{ postgres_install_path }}/bin"
   register: pg_dump_test
   ignore_errors: yes
 
@@ -73,7 +77,9 @@
 - name: backup database before upgrade / install
   block:
     - name: check postgresql is recheable
-      command: "export PGPASSWORD={{ db_password }}; {{ postgres_install_path }}/bin/psql -h {{ db_host }} -U {{ db_username }} -p {{ db_port }} -l"
+      command: "export PGPASSWORD={{ db_password }}; ./psql -h {{ db_host }} -U {{ db_username }} -p {{ db_port }} -l"
+      args:
+        chdir: "{{ postgres_install_path }}/bin"
       register: check_dbname
 
     - name: if db not exist - write sql file to create database
@@ -83,11 +89,15 @@
       when: "db_name not in check_dbname.stdout"  
     
     - name: "if db not exist - create empty {{ db_name }} database"
-      command: "export PGPASSWORD={{ db_password }}; {{ postgres_install_path }}/bin/psql -h {{ db_host }} -p {{ db_port }} -U {{ db_username }} -f {{ temp_folder }}/{{ db_name }}.sql"
+      command: "export PGPASSWORD={{ db_password }}; ./psql -h {{ db_host }} -p {{ db_port }} -U {{ db_username }} -f {{ temp_folder }}/{{ db_name }}.sql"
+      args:
+        chdir: "{{ postgres_install_path }}/bin"
       when: "db_name not in check_dbname.stdout"
 
     - name: run cloudserver database backup
-      command: "export PGPASSWORD={{ db_password }}; {{ postgres_install_path }}/bin/pg_dump -h {{ db_host }} -p {{ db_port }} -U {{ db_username }} -w -Fc {{ db_name }} > {{ backups_before_upgrade_dir }}/{{ timestamp }}-{{ db_name }}.dump"
+      command: "export PGPASSWORD={{ db_password }}; ./pg_dump -h {{ db_host }} -p {{ db_port }} -U {{ db_username }} -w -Fc {{ db_name }} > {{ backups_before_upgrade_dir }}/{{ timestamp }}-{{ db_name }}.dump"
+      args:
+        chdir: "{{ postgres_install_path }}/bin"
       when: "db_name in check_dbname.stdout" 
       
   when: psql_test.rc == 0 and pg_dump_test.rc == 0
