@@ -98,4 +98,4 @@
         chdir: "{{ postgres_install_path }}/bin"
       when: "db_name in check_dbname.stdout" 
       
-  when: psql_test.rc == 0 and pg_dump_test.rc == 0
+  when: postgres_install_path is defined and psql_test.rc == 0 and pg_dump_test.rc == 0
