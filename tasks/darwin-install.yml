@@ -173,15 +173,6 @@
   command: 'sudo /usr/sbin/installer -allowUntrusted -verboseR -dumplog -pkg "{{ hasp_installer }}" -target /'
   become: yes
 
-# clear temp files (optional)
-
-- name: clear temp folder
-  file:
-    path: "{{ temp_folder }}"
-    state: absent
-  become: yes
-  when: clear_temp_folder | default('no') | bool
-
 # expose role output
 
 - name: sanitize role name
