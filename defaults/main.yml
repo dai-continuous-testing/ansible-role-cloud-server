@@ -76,4 +76,4 @@ s3_download_url: "https://{{ cdn_name }}/{{ relative_path }}/{{ installer_file_n
 
 # 
 
-#health_check_port: 33300
+health_check_port: 33300

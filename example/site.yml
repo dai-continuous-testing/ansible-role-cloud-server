@@ -12,5 +12,3 @@
       db_connection_string: jdbc://localhost:5432/cloudserver
       db_username: postgres
       db_password: mysupersecurepassword
-      extra_application_properties: 
-        - "postgres.install.path": "C:/PostgreSQL/pg10"
