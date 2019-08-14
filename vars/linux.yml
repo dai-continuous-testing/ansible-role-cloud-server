@@ -16,4 +16,4 @@ relative_path: "cloud-server/linux"
 
 launcher_file_name: "start.sh"
 
-__cloud_backup_dir: "/opt/experitest/cloud-server/backups"
+__cloud_backup_dir: "/opt/experitest/cloud-server"

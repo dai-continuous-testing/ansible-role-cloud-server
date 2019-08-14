@@ -27,7 +27,7 @@
     db_name: "{{ db_connection_string.split('/')[3] }}"
     db_host: "{{ db_connection_string.split('/')[2].split(':')[0] }}"
     db_port: "{{ db_connection_string.split('/')[2].split(':')[1] }}"
-    backups_before_upgrade_dir: "{{ cloud_backup_dir + '_before_upgrade' }}"
+    backups_before_upgrade_dir: "{{ cloud_backup_dir }}\\backups_before_upgrade"
 
 
 # required dependencies

@@ -13,4 +13,4 @@ relative_path: "cloud-server/windows"
 
 launcher_file_name: "start.bat"
 
-__cloud_backup_dir: "C:\\ProgramData\\cloud-server\\backups"
+__cloud_backup_dir: "C:\\ProgramData\\cloud-server"
