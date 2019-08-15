@@ -39,6 +39,10 @@
   win_chocolatey:
     name: nssm
 
+- name: install vcredist2015 dependency
+  win_chocolatey:
+    name: vcredist2015
+
 - name: make sure java is installed on the machine
   win_command: java -version
   register: java_test
