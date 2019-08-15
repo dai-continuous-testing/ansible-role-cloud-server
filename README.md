@@ -19,7 +19,7 @@ Role Variables
 | state | should the application be present or absent | present, absent | present | no |
 | app_version | application version to install | string | 12.7.6640 | no |
 | server_port | port number for the server | number | 8080 | no |
-| extra_application_properties | additional props to be override in application.properties file | dict | {} | yes |
+| extra_application_properties | additional props to be override in application.properties file | dict | {} | no |
 | extra_xml_conf | extand xml configuration | dict | {} | no |
 | extra_java_options | extand java options | array of strings | [] | no |
 | license_type | license type | trial \ sentinel \ license4j | trial | no |
