@@ -95,7 +95,7 @@
       when: "db_name not in check_dbname.stdout"
 
     - name: run cloudserver database backup
-      shell: "\"{{ postgres_install_path }}/bin/pg_dump\" -w -Fc {{ db_name }} > {{ timestamp }}-{{ db_name }}.dump"
+      shell: "\"{{ postgres_install_path }}/bin/pg_dump\" -w -Fc {{ db_name }} > \"{{ backups_before_upgrade_dir }}/\"{{ timestamp }}-{{ db_name }}.dump"
       environment:
         PGPASSWORD: "{{ db_password }}"
         PGHOST: "{{ db_host }}"
@@ -103,7 +103,6 @@
         PGPORT: "{{ db_port }}"
       args:
         executable: /bin/bash
-        chdir: "{{ backups_before_upgrade_dir }}"
       when: "db_name in check_dbname.stdout"
     
   when: postgres_install_path is defined and psql_test.rc == 0 and pg_dump_test.rc == 0
