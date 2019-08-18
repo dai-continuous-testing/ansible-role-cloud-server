@@ -75,7 +75,9 @@
 - name: backup database before upgrade / install
   block:
     - name: check postgresql is recheable
-      win_command: c:\windows\system32\cmd.exe /C "set PGPASSWORD={{ db_password }}&& psql.exe -h {{ db_host }} -U {{ db_username }} -p {{ db_port }} -l"
+      win_command: psql.exe -h {{ db_host }} -U {{ db_username }} -p {{ db_port }} -l"
+      win_environment:
+        PGPASSWORD: "{{ db_password }}"
       args:
         chdir: "{{ postgres_install_path }}/bin"
       register: check_dbname
@@ -99,3 +101,4 @@
       when: "db_name in check_dbname.stdout" 
       
   when: postgres_install_path is defined and psql_test.rc == 0 and pg_dump_test.rc == 0
+  ignore_errors: yes
