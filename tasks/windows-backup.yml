@@ -6,6 +6,7 @@
     postgres_install_path: "{{ item.value }}"
   with_dict: "{{ extra_application_properties }}"
   when: "item.key == 'postgres.install.path'"
+  ignore_errors: yes
 
 # validation
 
