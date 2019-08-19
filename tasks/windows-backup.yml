@@ -75,7 +75,7 @@
 - name: backup database before upgrade / install
   block:
     - name: check postgresql is recheable
-      win_command: psql.exe -h {{ db_host }} -U {{ db_username }} -p {{ db_port }} -l"
+      win_command: "psql.exe -h {{ db_host }} -U {{ db_username }} -p {{ db_port }} -l"
       environment:
         PGPASSWORD: "{{ db_password }}"
       args:
