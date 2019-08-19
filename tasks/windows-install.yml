@@ -39,20 +39,14 @@
   win_chocolatey:
     name: nssm
 
-- name: install vcredist2015 dependency
-  win_chocolatey:
-    name: vcredist2015
-
-# ## Other way to install vcredist2015 dependency
-
-# - name: install visual c++ redistributable 2015 dependency
-#   win_package:
-#     path: https://download.microsoft.com/download/9/3/F/93FCF1E7-E6A4-478B-96E7-D4B285925B00/vc_redist.x64.exe
-#     product_id: '{C146EF48-4D31-3C3D-A2C5-1E91AF8A0A9B}'
-#     arguments:
-#     - /install
-#     - /passive
-#     - /norestart
+- name: install visual c++ redistributable 2015 dependency
+  win_package:
+    path: https://download.microsoft.com/download/9/3/F/93FCF1E7-E6A4-478B-96E7-D4B285925B00/vc_redist.x64.exe
+    product_id: '{C146EF48-4D31-3C3D-A2C5-1E91AF8A0A9B}'
+    arguments:
+    - /install
+    - /passive
+    - /norestart
 
 - name: make sure java is installed on the machine
   win_command: java -version
