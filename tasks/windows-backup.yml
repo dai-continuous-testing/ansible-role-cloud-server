@@ -34,15 +34,17 @@
 # required dependencies
 
 - name: make sure psql is installed on the machine
-  win_command: "psql.exe --version"
+  win_shell: "psql.exe --version"
   args:
+    executable: cmd
     chdir: "{{ postgres_install_path }}/bin"
   register: psql_test
   ignore_errors: yes
    
 - name: make sure pg_dump is installed on the machine
-  win_command: "pg_dump.exe --version"
+  win_shell: "pg_dump.exe --version"
   args:
+    executable: cmd
     chdir: "{{ postgres_install_path }}/bin"
   register: pg_dump_test
   ignore_errors: yes
