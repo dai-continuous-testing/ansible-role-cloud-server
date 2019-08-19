@@ -75,10 +75,14 @@
 - name: backup database before upgrade / install
   block:
     - name: check postgresql is recheable
-      win_command: "psql.exe -h {{ db_host }} -U {{ db_username }} -p {{ db_port }} -l"
+      win_shell: "psql.exe -l"
       environment:
         PGPASSWORD: "{{ db_password }}"
+        PGHOST: "{{ db_host }}"
+        PGUSER: "{{ db_username }}"
+        PGPORT: "{{ db_port }}"
       args:
+        executable: cmd
         chdir: "{{ postgres_install_path }}/bin"
       register: check_dbname
 
@@ -89,14 +93,26 @@
       when: "db_name not in check_dbname.stdout"  
     
     - name: "if db not exist - create empty {{ db_name }} database"
-      win_command: c:\windows\system32\cmd.exe /C "set PGPASSWORD={{ db_password }}&& psql.exe -h {{ db_host }} -p {{ db_port }} -U {{ db_username }} -f {{ temp_folder }}\\{{ db_name }}.sql"
+      win_shell: "psql.exe -f {{ temp_folder }}\\{{ db_name }}.sql"
+      environment:
+        PGPASSWORD: "{{ db_password }}"
+        PGHOST: "{{ db_host }}"
+        PGUSER: "{{ db_username }}"
+        PGPORT: "{{ db_port }}"
       args:
+        executable: cmd
         chdir: "{{ postgres_install_path }}/bin"
       when: "db_name not in check_dbname.stdout"
 
     - name: run cloudserver database backup
-      win_command: c:\windows\system32\cmd.exe /C "set PGPASSWORD={{ db_password }}&& pg_dump.exe -h {{ db_host }} -p {{ db_port }} -U {{ db_username }} -w -Fc {{ db_name }} > {{ backups_before_upgrade_dir }}\\{{ timestamp }}-{{ db_name }}.dump"
+      win_shell: "pg_dump.exe -w -Fc {{ db_name }} > {{ backups_before_upgrade_dir }}\\{{ timestamp }}-{{ db_name }}.dump"
+      environment:
+        PGPASSWORD: "{{ db_password }}"
+        PGHOST: "{{ db_host }}"
+        PGUSER: "{{ db_username }}"
+        PGPORT: "{{ db_port }}"
       args:
+        executable: cmd
         chdir: "{{ postgres_install_path }}/bin"
       when: "db_name in check_dbname.stdout" 
       
