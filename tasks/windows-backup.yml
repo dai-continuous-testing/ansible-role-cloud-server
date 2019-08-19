@@ -34,18 +34,16 @@
 # required dependencies
 
 - name: make sure psql is installed on the machine
-  win_shell: "psql.exe --version"
+  win_shell:  "\"{{ postgres_install_path }}/bin/psql.exe\" --version"
   args:
     executable: cmd
-    chdir: "{{ postgres_install_path }}/bin"
   register: psql_test
   ignore_errors: yes
    
 - name: make sure pg_dump is installed on the machine
-  win_shell: "pg_dump.exe --version"
+  win_shell: "\"{{ postgres_install_path }}/bin/pg_dump.exe\" --version"
   args:
     executable: cmd
-    chdir: "{{ postgres_install_path }}/bin"
   register: pg_dump_test
   ignore_errors: yes
 
@@ -78,7 +76,7 @@
 - name: backup database before upgrade / install
   block:
     - name: check postgresql is recheable
-      win_shell: "psql.exe -l"
+      win_shell: "\"{{ postgres_install_path }}/bin/psql.exe\" -l"
       environment:
         PGPASSWORD: "{{ db_password }}"
         PGHOST: "{{ db_host }}"
@@ -86,7 +84,6 @@
         PGPORT: "{{ db_port }}"
       args:
         executable: cmd
-        chdir: "{{ postgres_install_path }}/bin"
       register: check_dbname
 
     - name: if db not exist - write sql file to create database
@@ -96,7 +93,7 @@
       when: "db_name not in check_dbname.stdout"  
     
     - name: "if db not exist - create empty {{ db_name }} database"
-      win_shell: "psql.exe -f {{ temp_folder }}\\{{ db_name }}.sql"
+      win_shell: "\"{{ postgres_install_path }}/bin/psql.exe\" -f {{ temp_folder }}\\{{ db_name }}.sql"
       environment:
         PGPASSWORD: "{{ db_password }}"
         PGHOST: "{{ db_host }}"
@@ -104,11 +101,10 @@
         PGPORT: "{{ db_port }}"
       args:
         executable: cmd
-        chdir: "{{ postgres_install_path }}/bin"
       when: "db_name not in check_dbname.stdout"
 
     - name: run cloudserver database backup
-      win_shell: "pg_dump.exe -w -Fc {{ db_name }} > {{ backups_before_upgrade_dir }}\\{{ timestamp }}-{{ db_name }}.dump"
+      win_shell: "\"{{ postgres_install_path }}/bin/pg_dump.exe\" -w -Fc {{ db_name }} > {{ timestamp }}-{{ db_name }}.dump"
       environment:
         PGPASSWORD: "{{ db_password }}"
         PGHOST: "{{ db_host }}"
@@ -116,8 +112,8 @@
         PGPORT: "{{ db_port }}"
       args:
         executable: cmd
-        chdir: "{{ postgres_install_path }}/bin"
-      when: "db_name in check_dbname.stdout" 
+        chdir: "{{ backups_before_upgrade_dir }}"
+      when: "db_name in check_dbname.stdout"
       
   when: postgres_install_path is defined and psql_test.rc == 0 and pg_dump_test.rc == 0
   ignore_errors: yes
