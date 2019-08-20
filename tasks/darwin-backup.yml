@@ -18,6 +18,7 @@
   # - db_password
   - temp_folder
   - cloud_backup_dir
+  # - postgres_install_path
 
 # set required variables
 

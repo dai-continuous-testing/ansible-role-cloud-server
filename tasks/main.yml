@@ -3,8 +3,8 @@
 - name: validate vars
   include_tasks: tasks/variables.yml
 
-#- name: backup
-#  include_tasks: "tasks/{{ ansible_os_family | os_family_to_os_type }}-backup.yml"
+- name: backup
+  include_tasks: "tasks/{{ ansible_os_family | os_family_to_os_type }}-backup.yml"
 
 - name: install
   include_tasks: "tasks/{{ ansible_os_family | os_family_to_os_type }}-install.yml"
@@ -13,6 +13,10 @@
 - name: apply license
   include_tasks: "tasks/apply-license.yml"
   when: state|default('present') == 'present'
+
+- name: clear temp folder
+  include_tasks: "tasks/{{ ansible_os_family | os_family_to_os_type }}-clear-temp.yml"
+  when: clear_temp_folder | default('no') | bool
 
 - name: track versions
   include_tasks: "tasks/{{ ansible_os_family | os_family_to_os_type }}-track-versions.yml"

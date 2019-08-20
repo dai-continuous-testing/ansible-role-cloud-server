@@ -24,6 +24,6 @@
 
 - name: wait for service to start
   win_health_check:
-    url: "http://localhost:{{ health_check_port | default(server_port) }}{{ health_check_uri | default('/manage/health') }}"
+    url: "http://localhost:{{ health_check_port | default(server_port) }}{{ health_check_uri | default('/manage/info') }}"
     expected_status: "{{ health_check_status | default('200') }}"
-    max_retries: "{{ health_check_max_retries | default('10') }}"
+    max_retries: "{{ health_check_max_retries | default('20') }}"

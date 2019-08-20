@@ -18,6 +18,7 @@
   # - db_password
   - temp_folder
   - cloud_backup_dir
+  # - postgres_install_path
 
 # set required variables
 
@@ -48,12 +49,12 @@
 
 # - name: fail if psql is not found
 #   fail:
-#     msg: psql must be accesible in path
+#     msg: "psql not found in path {{ postgres_install_path }}/bin"
 #   when: psql_test.rc != 0
 # 
 # - name: fail if pg_dump is not found
 #   fail:
-#     msg: pg_dump must be accesible in path
+#     msg: "pg_dump not found in path {{ postgres_install_path }}/bin"
 #   when: pg_dump_test.rc != 0    
 
 
