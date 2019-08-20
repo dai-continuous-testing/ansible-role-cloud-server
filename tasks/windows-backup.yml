@@ -1,0 +1,118 @@
+
+# set postgres path
+
+- name: set postgres path
+  set_fact:
+    postgres_install_path: "{{ item.value }}"
+  with_dict: "{{ extra_application_properties }}"
+  when: "item.key == 'postgres.install.path'"
+  ignore_errors: yes
+
+# validation
+
+- name: assert all vars are set
+  assert: { that: "{{ item }} != '' " }
+  with_items:
+  - db_connection_string
+  - db_username
+  # - db_password
+  - temp_folder
+  - cloud_backup_dir
+  # - postgres_install_path
+
+# set required variables
+
+- name: set facts
+  set_fact:
+    timestamp: "{{ lookup('pipe', 'date +%Y-%m-%d-%H-%M') }}"
+    db_name: "{{ db_connection_string.split('/')[3] }}"
+    db_host: "{{ db_connection_string.split('/')[2].split(':')[0] }}"
+    db_port: "{{ db_connection_string.split('/')[2].split(':')[1] }}"
+    backups_before_upgrade_dir: "{{ cloud_backup_dir }}\\backups_before_upgrade"
+
+
+# required dependencies
+
+- name: make sure psql is installed on the machine
+  win_shell:  "\"{{ postgres_install_path }}/bin/psql.exe\" --version"
+  args:
+    executable: cmd
+  register: psql_test
+  ignore_errors: yes
+   
+- name: make sure pg_dump is installed on the machine
+  win_shell: "\"{{ postgres_install_path }}/bin/pg_dump.exe\" --version"
+  args:
+    executable: cmd
+  register: pg_dump_test
+  ignore_errors: yes
+
+# - name: fail if psql is not found
+#   fail:
+#     msg: "psql not found in path {{ postgres_install_path }}/bin"
+#   when: psql_test.rc != 0
+# 
+# - name: fail if pg_dump is not found
+#   fail:
+#     msg: "pg_dump not found in path {{ postgres_install_path }}/bin"
+#   when: pg_dump_test.rc != 0    
+
+
+# set temp folder and backup directory
+
+- name: make sure temp folder exists
+  win_file:
+    path: "{{ temp_folder }}"
+    state: directory
+
+- name: make sure backup directory exists
+  win_file:
+    path: "{{ backups_before_upgrade_dir }}"
+    state: directory
+
+
+# backup database before upgrade
+
+- name: backup database before upgrade / install
+  block:
+    - name: check postgresql is recheable
+      win_shell: "\"{{ postgres_install_path }}/bin/psql.exe\" -l"
+      environment:
+        PGPASSWORD: "{{ db_password }}"
+        PGHOST: "{{ db_host }}"
+        PGUSER: "{{ db_username }}"
+        PGPORT: "{{ db_port }}"
+      args:
+        executable: cmd
+      register: check_dbname
+
+    - name: if db not exist - write sql file to create database
+      win_copy:
+        content: "create database {{ db_name }}"
+        dest: "{{ temp_folder }}\\{{ db_name }}.sql"
+      when: "db_name not in check_dbname.stdout"  
+    
+    - name: "if db not exist - create empty {{ db_name }} database"
+      win_shell: "\"{{ postgres_install_path }}/bin/psql.exe\" -f {{ temp_folder }}\\{{ db_name }}.sql"
+      environment:
+        PGPASSWORD: "{{ db_password }}"
+        PGHOST: "{{ db_host }}"
+        PGUSER: "{{ db_username }}"
+        PGPORT: "{{ db_port }}"
+      args:
+        executable: cmd
+      when: "db_name not in check_dbname.stdout"
+
+    - name: run cloudserver database backup
+      win_shell: "\"{{ postgres_install_path }}/bin/pg_dump.exe\" -w -Fc {{ db_name }} > {{ backups_before_upgrade_dir }}//{{ timestamp }}-{{ db_name }}.dump"
+      environment:
+        PGPASSWORD: "{{ db_password }}"
+        PGHOST: "{{ db_host }}"
+        PGUSER: "{{ db_username }}"
+        PGPORT: "{{ db_port }}"
+      args:
+        executable: cmd
+      when: "db_name in check_dbname.stdout"
+      
+  when: postgres_install_path is defined and psql_test.rc == 0 and pg_dump_test.rc == 0
+  ignore_errors: yes
