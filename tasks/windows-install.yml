@@ -47,6 +47,7 @@
     - /install
     - /passive
     - /norestart
+  ignore_errors: yes
 
 - name: make sure java is installed on the machine
   win_command: java -version
