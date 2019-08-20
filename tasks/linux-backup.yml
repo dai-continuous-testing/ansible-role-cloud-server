@@ -1,4 +1,13 @@
 
+# set postgres path
+
+- name: set postgres path
+  set_fact:
+    postgres_install_path: "{{ item.value }}"
+  with_dict: "{{ extra_application_properties }}"
+  when: "item.key == 'postgres.install.path'"
+  ignore_errors: yes
+
 # validation
 
 - name: assert all vars are set
@@ -24,12 +33,12 @@
 # required dependencies
 
 - name: make sure psql is installed on the machine
-  command: "psql --version"
+  command: "\"{{ postgres_install_path }}/bin/psql\" --version"
   register: psql_test
   ignore_errors: yes
    
 - name: make sure pg_dump is installed on the machine
-  command: "pg_dump --version"
+  command: "\"{{ postgres_install_path }}/bin/pg_dump\" --version"
   register: pg_dump_test
   ignore_errors: yes
 
@@ -68,7 +77,7 @@
 - name: backup database before upgrade / install
   block:
     - name: check postgresql is recheable
-      command: "psql -h {{ db_host }} -U {{ db_username }} -p {{ db_port }} -l"
+      command: "\"{{ postgres_install_path }}/bin/psql\" -h {{ db_host }} -U {{ db_username }} -p {{ db_port }} -l"
       environment:
         PGPASSWORD: "{{ db_password }}"
       register: check_dbname
@@ -80,13 +89,13 @@
       when: "db_name not in check_dbname.stdout"  
     
     - name: "if db not exist - create empty {{ db_name }} database"
-      command: "psql -h {{ db_host }} -p {{ db_port }} -U {{ db_username }} -f {{ temp_folder }}/{{ db_name }}.sql"
+      command: "\"{{ postgres_install_path }}/bin/psql\" -h {{ db_host }} -p {{ db_port }} -U {{ db_username }} -f {{ temp_folder }}/{{ db_name }}.sql"
       environment:
         PGPASSWORD: "{{ db_password }}"
       when: "db_name not in check_dbname.stdout"
 
     - name: run cloudserver database backup
-      shell: "pg_dump -w -Fc {{ db_name }} > {{ timestamp }}-{{ db_name }}.dump"
+      shell: "\"{{ postgres_install_path }}/bin/pg_dump\" -w -Fc {{ db_name }} > \"{{ backups_before_upgrade_dir }}/\"{{ timestamp }}-{{ db_name }}.dump"
       environment:
         PGPASSWORD: "{{ db_password }}"
         PGHOST: "{{ db_host }}"
@@ -94,7 +103,6 @@
         PGPORT: "{{ db_port }}"
       args:
         executable: /bin/bash
-        chdir: "{{ backups_before_upgrade_dir }}"
       when: "db_name in check_dbname.stdout"
     
   when: postgres_install_path is defined and psql_test.rc == 0 and pg_dump_test.rc == 0

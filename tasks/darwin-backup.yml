@@ -1,4 +1,13 @@
 
+# set postgres path
+
+- name: set postgres path
+  set_fact:
+    postgres_install_path: "{{ item.value }}"
+  with_dict: "{{ extra_application_properties }}"
+  when: "item.key == 'postgres.install.path'"
+  ignore_errors: yes
+
 # validation
 
 - name: assert all vars are set
