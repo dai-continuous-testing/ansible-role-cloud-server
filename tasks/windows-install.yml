@@ -56,7 +56,7 @@
     path: "{{ temp_folder }}"
     state: directory
 
-# install java
+# install java dependency
 
 - name: download java from s3 url
   win_get_url:
