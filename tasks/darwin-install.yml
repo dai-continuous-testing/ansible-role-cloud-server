@@ -24,17 +24,6 @@
   - xml_conf
   - extra_java_options
 
-# required dependencies
-
-- name: make sure java is installed on the machine
-  command: java -version
-  register: java_test
-  ignore_errors: yes
-
-- name: fail if java is not found
-  fail:
-    msg: java must be accesible in path
-  when: java_test.rc != 0
 
 # set temp folder
 
@@ -44,6 +33,40 @@
     state: directory
     owner: "{{ ansible_user_id }}"
   become: yes
+
+# install java dependency
+
+- name: download java from s3 url
+  get_url:
+    url: "{{ java_download_url }}"
+    dest: "{{ temp_folder }}/{{ java_download_filename }}"
+    timeout: "{{ download_timeout | default(60) }}"
+
+- name: make sure java installation folder exists
+  file:
+    path: "{{ java_installation_folder }}"
+    state: directory
+    owner: "{{ ansible_user_id }}"
+  become: yes
+
+- name: unzip java file
+  unarchive:
+    src: "{{ temp_folder }}/{{ java_download_filename }}"
+    dest: "{{ java_installation_folder }}"
+    remote_src: yes
+    creates: "{{ java_installation_folder }}/{{ java_version }}/Contents/Home/bin"
+    owner: "{{ ansible_user_id }}"
+  become: yes
+
+- name: make sure java is installed on the machine
+  command: "{{ java_bin }} -version"
+  register: java_test
+  ignore_errors: yes
+
+- name: fail if java is not found
+  fail:
+    msg: java must be accesible in path
+  when: java_test.rc != 0
 
 # download the file
 
@@ -74,8 +97,6 @@
     path: "{{ installation_folder }}"
     state: absent
   when: clear_before_install == True
-  notify:
-    - start the service
 
 # unpack and copy all the files to the installation folder
 
