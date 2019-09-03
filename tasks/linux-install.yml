@@ -68,6 +68,15 @@
     owner: "{{ ansible_user_id }}"
   become: yes
 
+- name: add permission to java bin path
+  file:
+    path: "{{ java_installation_folder }}/{{ java_version }}/Contents/Home/bin"
+    state: directory
+    recurse: yes
+    mode: '0777'
+    owner: "{{ ansible_user_id }}"
+  become: yes
+
 - name: make sure java is installed on the machine
   command: "{{ java_bin }} -version"
   register: java_test
