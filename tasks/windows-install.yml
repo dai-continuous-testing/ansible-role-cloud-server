@@ -49,8 +49,38 @@
     - /norestart
   ignore_errors: yes
 
+# set temp folder
+
+- name: make sure temp folder exists
+  win_file:
+    path: "{{ temp_folder }}"
+    state: directory
+
+# install java
+
+- name: download java from s3 url
+  win_get_url:
+    url: "{{ java_download_url }}"
+    dest: "{{ temp_folder }}\\{{ java_download_filename }}"
+    timeout: "{{ download_timeout | default(60) }}"
+    force: no
+
+- name: make sure java installation folder exists
+  win_file:
+    path: "{{ java_installation_folder }}"
+    state: directory
+  become: yes
+
+- name: unzip java file
+  win_unzip:
+    src: "{{ temp_folder }}\\{{ java_download_filename }}"
+    dest: "{{ java_installation_folder }}"
+    remote_src: yes
+    creates: "{{ java_installation_folder }}\\{{ java_version }}\\bin"
+  become: yes
+
 - name: make sure java is installed on the machine
-  win_command: java -version
+  win_command: "{{ java_bin }} -version"
   register: java_test
   ignore_errors: yes
 
@@ -58,13 +88,6 @@
   fail:
     msg: java must be accesible in path
   when: java_test.rc != 0
-
-# set temp folder
-
-- name: make sure temp folder exists
-  win_file:
-    path: "{{ temp_folder }}"
-    state: directory
 
 # download the file
 
@@ -204,3 +227,4 @@
       installation_folder: "{{ installation_folder }}"
       configuration_file: "{{ installation_folder }}\\conf\\application.properties"
       configuration_xml_file: "{{ installation_folder }}\\conf\\cloudserver.conf.xml"
+      java_bin: "{{ java_bin }}"

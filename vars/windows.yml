@@ -14,3 +14,11 @@ relative_path: "cloud-server/windows"
 launcher_file_name: "start.bat"
 
 __cloud_backup_dir: "C:\\ProgramData\\cloud-server"
+
+java_download_filename: "{{ java_version }}-windows.zip"
+
+java_relative_path: "java/windows"
+
+java_installation_folder: "c:\\java"
+
+java_bin: "{{ java_installation_folder }}\\{{ java_version }}\\bin\\java.exe"
