@@ -60,26 +60,15 @@
   become: yes
 
 - name: unzip java file
-  unarchive:
-    src: "{{ temp_folder }}/{{ java_download_filename }}"
-    dest: "{{ java_installation_folder }}"
-    remote_src: yes
-    creates: "{{ java_installation_folder }}/{{ java_version }}/bin"
-    owner: "{{ ansible_user_id }}"
-  become: yes
-
-- name: add permission to java bin path
-  file:
-    path: "{{ java_installation_folder }}/{{ java_version }}/Contents/Home/bin"
-    state: directory
-    recurse: yes
-    mode: '0777'
-    owner: "{{ ansible_user_id }}"
+  command: "tar -xzvf {{ temp_folder }}/{{ java_download_filename }} -C {{ java_installation_folder }}"
+  args:
+    creates: "{{ java_bin }}"
   become: yes
 
 - name: make sure java is installed on the machine
   command: "{{ java_bin }} -version"
   register: java_test
+  become: yes
   ignore_errors: yes
 
 - name: fail if java is not found

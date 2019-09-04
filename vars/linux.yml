@@ -18,10 +18,10 @@ launcher_file_name: "start.sh"
 
 __cloud_backup_dir: "/opt/experitest/cloud-server"
 
-java_download_filename: "{{ java_version }}-linux.zip"
+java_download_filename: "jre{{ java_version }}-linux-x64.tar.gz"
 
 java_relative_path: "java/linux"
 
-java_installation_folder: "/opt/java"
+java_installation_folder: "/opt/Java"
 
-java_bin: "{{ java_installation_folder }}/{{ java_version }}/bin/java"
+java_bin: "{{ java_installation_folder }}/jre{{ java_version }}/bin/java"

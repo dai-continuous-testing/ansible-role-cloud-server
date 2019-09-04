@@ -76,7 +76,7 @@
     src: "{{ temp_folder }}\\{{ java_download_filename }}"
     dest: "{{ java_installation_folder }}"
     remote_src: yes
-    creates: "{{ java_installation_folder }}\\{{ java_version }}\\bin"
+    creates: "{{ java_bin }}"
   become: yes
 
 - name: make sure java is installed on the machine
