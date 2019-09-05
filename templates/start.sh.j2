@@ -7,8 +7,8 @@
 
 # VMOPTIONS=$(loadVmOptions start.vmoptions)
 
-JAVA_PATH=$(/usr/libexec/java_home -v 1.8)
-JAVA_BIN=$JAVA_PATH/bin/java
+# JAVA_PATH=$(/usr/libexec/java_home -v 1.8)
+JAVA_BIN={{ java_bin }}
 
 $JAVA_BIN -cp ".:lib/*" \
     -Dcom.sun.jndi.ldap.object.disableEndpointIdentification=true \
