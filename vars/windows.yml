@@ -19,6 +19,6 @@ java_download_filename: "jre{{ java_version }}-windows-x64.zip"
 
 java_relative_path: "java/windows"
 
-java_installation_folder: "c:\\Java"
+java_installation_folder: "{{ installation_root_folder }}\\jre"
 
 java_bin: "{{ java_installation_folder }}\\jre{{ java_version }}\\bin\\java.exe"
