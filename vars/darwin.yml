@@ -19,3 +19,11 @@ hasp_installer_tar: "{{ hasp_installer_tar_folder }}/SentinelRuntime.tar"
 hasp_installer: "{{ hasp_installer_tar_folder }}/SentinelRuntimeInstaller.framework/Versions/A/Resources/Sentinel Runtime.pkg"
 
 __cloud_backup_dir: "/Library/Application Support/Experitest/cloud-server"
+
+java_download_filename: "jre{{ java_version }}-macosx-x64.tar.gz"
+
+java_relative_path: "java/osx"
+
+java_installation_folder: "{{ installation_root_folder }}/jre"
+
+java_bin: "{{ java_installation_folder }}/jre{{ java_version }}.jre/Contents/Home/bin/java"
