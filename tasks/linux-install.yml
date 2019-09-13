@@ -156,7 +156,7 @@
   become: yes
 
 - name: synchronize zip content to installation folder
-  command: "rsync -r {{ temp_folder }}/{{ (installer_file_name | splitext)[0] }}/{{ convention }} {{ installation_folder }}"
+  command: "rsync -r {{ temp_folder }}/{{ (installer_file_name | splitext)[0] }}/{{ convention }}/ {{ installation_folder }}"
   become: yes
   notify:
     - start the service
