@@ -3,13 +3,13 @@ Experitest - Cloud Server ansible role
 
 [![Build Status](https://travis-ci.org/ExperitestOfficial/ansible-role-cloud-server.svg)](https://travis-ci.org/ExperitestOfficial/ansible-role-cloud-server)
 
-This role will install \ uninstall cloud server for windows and mac os hosts
+This role will install \ uninstall cloud server for windows, linux and mac os hosts
 
 Requirements
 ------------
 
-This role assumes that you have java 8 installed on the instance
-Supports windows and mac os hosts only.
+This role assumes that you have postgresql server already install.<br>
+Supports windows, linux and mac os hosts only.
 
 Role Variables
 --------------
@@ -27,14 +27,14 @@ Role Variables
 | db_connection_string | connection string to postgres | string | jdbc:postgresql://localhost:5432/cloudserver | no |
 | db_username | username for db connection | string | postgres | no |
 | db_password | password for db connection | string |  | no |
-| installation_folder | the folder in which the applcation will be installed | string | for mac: /Applications/Experitest/cloud-server-version <br> for windows: C:\\Experitest\\cloud-server-version  | no |
+| installation_folder | the folder in which the applcation will be installed | string | for mac: /Applications/Experitest/cloudserver-version <br> for windows: C:\\Experitest\\cloudserver-version <br> for linux: /opt/Experitest/cloudserver-version | no |
 | jmx_port | port number for jmx inspection | number | 51234 | no |
 | java_version | java jre version to install | string | 1.8.0_181 | no |
 | custom_download_url | custom url to download the installation from (zip format) | string |  | no |
 | start_after_install | should application start after installation is completed | boolean | True | no |
 | clear_temp_folder | remove temp folder after installation | boolean | False | no |
 | clear_before_install | removing old installation before installing new version | boolean | False | no |
-| cloud_backup_dir | the default path for the cloud backups | string | for mac: /Library/Application Support/Experitest/cloud-server <br> for windows: C:\\ProgramData\\cloud-server  | no |
+| cloud_backup_dir | the default path for the cloud backups | string | for mac: /Library/Application Support/Experitest/cloudserver <br> for windows: C:\\ProgramData\\cloudserver <br> for linux: /var/lib/Experitest/cloudserver | no |
 
 Example Playbook
 ----------------

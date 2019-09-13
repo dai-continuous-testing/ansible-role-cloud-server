@@ -12,6 +12,7 @@
   - clear_before_install
   - server_port
   - jmx_port
+  - service_file_path
   - installer_file_name
   - ansible_user_id
   - s3_download_url
@@ -37,13 +38,32 @@
     state: present
   become: yes
 
+# disable selinux and firewalld
+
+- name: disable selinux
+  selinux:
+    state: disabled
+  become: yes
+   
+- name: stop and disable firewall     ## need to discuss on disabling firewall service
+  systemd:
+    name: "{{ item }}"
+    state: stopped
+    enabled: no
+  become: yes
+  ignore_errors: yes
+  with_items:
+    - firewalld
+
 # set temp folder
 
 - name: make sure temp folder
   file:
     path: "{{ temp_folder }}"
     state: directory
-
+    owner: "{{ ansible_user_id }}"
+  become: yes
+  
 # install java dependency
 
 - name: download java from s3 url
@@ -108,8 +128,6 @@
     path: "{{ installation_folder }}"
     state: absent
   when: clear_before_install == True
-  notify:
-    - start the service
 
 # unpack and copy all the files to the installation folder
 
@@ -149,17 +167,14 @@
 - name: copy service file
   template:
     src: systemd.service.j2
-    dest: "/etc/systemd/system/{{ service_name }}.service"
-    owner: root
+    dest: "{{ service_file_path }}"
   become: yes
-  notify:
-    - start the service
 
 - name: copy start script
   template:
-    src: "{{ ansible_os_family | os_family_to_os_type }}-start.sh.j2"
+    src: start.sh.j2
     dest: "{{ installation_folder }}/{{ launcher_file_name }}"
-    mode: 0755
+    mode: 0777
     owner: "{{ ansible_user_id }}"
   become: yes
 
