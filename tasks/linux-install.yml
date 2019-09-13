@@ -236,3 +236,5 @@
       installation_folder: "{{ installation_folder }}"
       configuration_file: "{{ installation_folder }}/conf/application.properties"
       configuration_xml_file: "{{ installation_folder }}/conf/cloudagent.conf.xml"
+      cloud_backup_dir: "{{ cloud_backup_dir }}"
+      java_bin: "{{ java_bin }}"
