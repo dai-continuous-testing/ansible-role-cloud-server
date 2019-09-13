@@ -156,11 +156,8 @@
   become: yes
 
 - name: synchronize zip content to installation folder
-  synchronize:
-    src: "{{ temp_folder }}/{{ (installer_file_name | splitext)[0] }}/{{ convention }}/"
-    dest: "{{ installation_folder }}"
-    recursive: yes
-  delegate_to: "{{ inventory_hostname }}"
+  command: "rsync -r {{ temp_folder }}/{{ (installer_file_name | splitext)[0] }}/{{ convention }} {{ installation_folder }}"
+  become: yes
   notify:
     - start the service
 
