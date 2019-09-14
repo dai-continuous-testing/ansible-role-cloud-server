@@ -11,7 +11,7 @@ required_modifiable_fields:
   - cloud_backup_dir
   - java_version
 
-app_name: cloudserver
+app_name: cloud-server
 __app_version: 12.8.7025
 
 main_class: "com.experitest.cloudserver.CloudServerMain"
