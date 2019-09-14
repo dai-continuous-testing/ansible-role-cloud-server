@@ -1,12 +1,6 @@
 
 - hosts: cloud-servers
 
-  pre_tasks:
-    
-    - name: make sure java8 is installed
-      win_chocolatey: name=jdk8
-      when: ansible_os_family == "Windows"
-
   roles:
     - role: cloud-server
       db_connection_string: jdbc://localhost:5432/cloudserver
