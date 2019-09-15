@@ -18,7 +18,7 @@ relative_path: "cloud-server/linux"
 
 launcher_file_name: "start.sh"
 
-__cloud_backup_dir: "/var/lib/Experitest/{{ app_name }}"
+__cloud_backup_dir: "/var/lib/Experitest/cloud-server"
 
 java_download_filename: "jre{{ java_version }}-linux-x64.tar.gz"
 

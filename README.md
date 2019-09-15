@@ -34,7 +34,7 @@ Role Variables
 | start_after_install | should application start after installation is completed | boolean | True | no |
 | clear_temp_folder | remove temp folder after installation | boolean | False | no |
 | clear_before_install | removing old installation before installing new version | boolean | False | no |
-| cloud_backup_dir | the default path for the cloud backups | string | for mac: /Library/Application Support/Experitest/cloudserver <br> for windows: C:\\ProgramData\\cloudserver <br> for linux: /var/lib/Experitest/cloudserver | no |
+| cloud_backup_dir | the default path for the cloud backups | string | for mac: /Library/Application Support/Experitest/cloud-server <br> for windows: C:\\ProgramData\\cloud-server <br> for linux: /var/lib/Experitest/cloud-server | no |
 
 Example Playbook
 ----------------
