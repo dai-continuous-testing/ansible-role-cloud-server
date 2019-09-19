@@ -107,3 +107,4 @@
       when: "db_name in check_dbname.stdout"
     
   when: postgres_install_path is defined and psql_test.rc == 0 and pg_dump_test.rc == 0
+  ignore_errors: yes

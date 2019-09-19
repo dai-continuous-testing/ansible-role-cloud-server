@@ -110,3 +110,4 @@
     - psql_test.rc == 0 
     - pg_dump_test.rc == 0
     - postgres_install_path is defined
+  ignore_errors: yes
