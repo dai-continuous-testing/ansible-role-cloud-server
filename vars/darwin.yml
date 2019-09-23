@@ -5,6 +5,8 @@ __installation_folder: "{{ installation_root_folder }}/{{ app_name }}-{{ app_ver
 
 temp_folder: "/tmp/experitest"
 
+service_name: "com.experitest.{{ app_name }}"
+
 service_plist_file_path: "/Library/LaunchDaemons/{{ service_name }}.plist"
 
 installer_file_name: "dist-Mac-SERVER-{{ app_version }}.zip"

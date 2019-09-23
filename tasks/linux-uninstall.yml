@@ -2,8 +2,10 @@
 - name: assert all vars are set
   assert: { that: "{{ item }} != '' " }
   with_items:
-  - installation_root_folder
+  - app_name
   - service_name
+  - installation_root_folder
+  - service_file_path
   - temp_folder
 
 - name: gather installed services
@@ -19,15 +21,9 @@
 
 - name: remove the service
   file:
-    path: "/etc/systemd/system/{{ service_name }}.service"
+    path: "{{ service_file_path }}"
     state: absent
   become: yes
-
-- name: remove temp folder
-  file:
-    path: "{{ temp_folder }}"
-    state: absent
-  when: clear_temp_folder | default('no') | bool
 
 - name: remove tracking files
   file: 
@@ -36,6 +32,7 @@
   with_items:
     - "{{ app_name }}-previous"
     - "{{ app_name }}-current"
+  become: yes
 
 - name: find app versions
   find:
@@ -49,3 +46,4 @@
     path: "{{ item.path }}"
     state: absent
   with_items: "{{ application_versions.files }}"
+  become: yes
