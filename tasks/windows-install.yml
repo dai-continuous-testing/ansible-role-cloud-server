@@ -115,6 +115,29 @@
     state: absent
   become: yes
 
+# kill notepadd
+
+- name: kill notepad apps
+  block:
+    - name: kill notepad
+      win_shell: |
+        taskkill /F /IM notepad.exe
+      register: killnotepad
+      changed_when: killnotepad.rc == 0 and 'The process "notepad.exe" not found.' not in killnotepad.stderr
+      failed_when: killnotepad.rc != 0 and 'The process "notepad.exe" not found.' not in killnotepad.stderr
+      become: yes
+
+    - name: kill notepad++
+      win_shell: |
+        taskkill /F /IM notepad++.exe
+      register: killnotepadplusplus
+      changed_when: killnotepadplusplus.rc == 0 and 'The process "notepad++.exe" not found.' not in killnotepadplusplus.stderr
+      failed_when: killnotepadplusplus.rc != 0 and 'The process "notepad++.exe" not found.' not in killnotepadplusplus.stderr
+      become: yes
+
+  when: kill_notepad == True
+  ignore_errors: yes
+
 # delete old installation (optional)
 
 - name: clear old installation folder
