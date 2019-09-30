@@ -191,6 +191,14 @@
   with_dict: "{{ application_properties }}"
   become: yes
 
+- name: update logback properties file
+  lineinfile:
+    path: "{{ installation_folder }}/conf/logback.properties"
+    line: "{{ item.key }}={{ item.value }}"
+    regexp: "^{{ item.key | replace('.', '\\.') }}="
+  with_dict: "{{ logback_properties }}"
+  become: yes
+
 - name: update xml conf
   lineinfile:
     state: present
