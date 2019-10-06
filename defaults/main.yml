@@ -75,6 +75,8 @@ start_after_install: True
 clear_temp_folder: False
 clear_before_install: False
 
+kill_notepad: False
+
 convention: "Server"
 
 custom_download_url: ""

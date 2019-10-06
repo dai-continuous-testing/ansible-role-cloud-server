@@ -22,6 +22,7 @@
   - application_properties
   - xml_conf
   - extra_java_options
+  - kill_notepad
 
 # required dependencies
 
