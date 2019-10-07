@@ -22,6 +22,7 @@
   - application_properties
   - xml_conf
   - extra_java_options
+  - kill_notepad
 
 # required dependencies
 
@@ -190,6 +191,14 @@
     line: "{{ item.key }}={{ item.value }}"
     regexp: "^{{ item.key | replace('.', '\\.') }}="
   with_dict: "{{ application_properties }}"
+  become: yes
+
+- name: update logback properties file
+  win_lineinfile:
+    path: "{{ installation_folder }}\\conf\\logback.properties"
+    line: "{{ item.key }}={{ item.value }}"
+    regexp: "^{{ item.key | replace('.', '\\.') }}="
+  with_dict: "{{ logback_properties }}"
   become: yes
 
 - name: update xml conf

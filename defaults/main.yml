@@ -54,6 +54,12 @@ xml_conf: "{{ base_xml_conf | combine(extra_xml_conf) }}"
 
 #
 
+extra_logback_properties: {}
+
+logback_properties: "{{ extra_logback_properties }}"
+
+#
+
 __license_type: "{{ license_type | default('trial') }}"
 __license_valid_options: 
   - trial
@@ -68,6 +74,8 @@ start_after_install: True
 
 clear_temp_folder: False
 clear_before_install: False
+
+kill_notepad: False
 
 convention: "Server"
 
