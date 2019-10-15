@@ -221,12 +221,12 @@
 
 - name: check the zipalign file exists
   stat:
-    path: "{{ installation_folder }}/bin/adb/js/darwin/zipalign"
+    path: "{{ installation_folder }}/bin/adb/js/linux/zipalign"
   register: zipalign_exists
 
 - name: set permissions to zipalign file
   file:
-    path: "{{ installation_folder }}/bin/adb/js/darwin/zipalign"
+    path: "{{ installation_folder }}/bin/adb/js/linux/zipalign"
     state: file
     mode: 0777
   become: yes
