@@ -12,7 +12,7 @@ required_modifiable_fields:
   - java_version
 
 app_name: cloudserver
-__app_version: 12.9.7234
+__app_version: 12.9.7322
 
 main_class: "com.experitest.cloudserver.CloudServerMain"
 
