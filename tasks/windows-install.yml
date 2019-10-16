@@ -231,6 +231,7 @@
 - name: run hasp installer
   win_command: "{{ installation_folder }}\\bin\\haspdinst.exe -i -fi -criticalmsg"
   become: yes
+  when: __license_type != "license4j"
 
 # install the service
 

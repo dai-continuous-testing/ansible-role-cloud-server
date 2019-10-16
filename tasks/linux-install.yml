@@ -217,6 +217,21 @@
     owner: "{{ ansible_user_id }}"
   become: yes
 
+# set permission to zipalign file
+
+- name: check the zipalign file exists
+  stat:
+    path: "{{ installation_folder }}/bin/adb/js/linux/zipalign"
+  register: zipalign_exists
+
+- name: set permissions to zipalign file
+  file:
+    path: "{{ installation_folder }}/bin/adb/js/linux/zipalign"
+    state: file
+    mode: 0777
+  become: yes
+  when: zipalign_exists.stat.exists
+
 # QUESTION should remove pairing key for cloud ?
 
 # - name: reset pairing key
