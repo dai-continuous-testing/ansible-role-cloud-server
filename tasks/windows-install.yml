@@ -89,6 +89,14 @@
 
 # stop old service
 
+- name: stop the old install4j service if exists
+  win_service:
+    name: "{{ item }}"
+    state: absent
+  become: yes 
+  with_items:
+    - cloudserver
+
 - name: stop the old service
   win_nssm:
     name: "{{ service_name }}"
