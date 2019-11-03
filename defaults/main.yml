@@ -4,12 +4,13 @@ required_modifiable_fields:
   - app_version
   - server_port
   - jmx_port
-  - installation_folder
+  - installation_root_folder
   - db_connection_string
   - db_username
   - db_password
   - cloud_backup_dir
   - java_version
+  - cloud_backup_dir
 
 app_name: cloudserver
 __app_version: 12.8.7025

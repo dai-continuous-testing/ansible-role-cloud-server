@@ -19,12 +19,6 @@
   become: yes
   ignore_errors: yes
 
-- name: remove temp folder
-  win_file:
-    path: "{{ temp_folder }}"
-    state: absent
-  when: clear_temp_folder | default('no') | bool
-
 - name: remove tracking files
   win_file: 
     path: "{{ installation_root_folder }}\\{{ item }}"
