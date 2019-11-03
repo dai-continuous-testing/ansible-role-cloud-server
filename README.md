@@ -8,9 +8,9 @@ This role will install \ uninstall cloud server for windows, linux and mac os ho
 Requirements
 ------------
 
-[ansible-role-java8](https://github.com/ExperitestOfficial/ansible-role-java8) must be installed on all machines. <br>
-This role assumes that you have [postgresql server](https://github.com/ExperitestOfficial/ansible-role-postgresql-server) already installed. <br>
-Supports windows, linux and mac os hosts only.
+* [ansible-role-java8](https://github.com/ExperitestOfficial/ansible-role-java8) must be installed on all machines. <br>
+* This role assumes that you have [postgresql server](https://github.com/ExperitestOfficial/ansible-role-postgresql-server) already installed. <br>
+* Supports windows, linux and mac os hosts only.
 
 Role Variables
 --------------
