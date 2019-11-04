@@ -1,7 +1,7 @@
 ---
 
-installation_root_folder: "/Applications/Experitest"
-__installation_folder: "{{ installation_root_folder }}/{{ app_name }}-{{ app_version }}"
+__installation_root_folder: "/Applications/Experitest"
+installation_folder: "{{ installation_root_folder }}/{{ app_name }}-{{ app_version }}"
 
 temp_folder: "/tmp/experitest"
 

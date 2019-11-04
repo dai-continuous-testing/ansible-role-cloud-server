@@ -6,7 +6,6 @@
   - service_name
   - installation_root_folder
   - service_file_path
-  - temp_folder
 
 - name: gather installed services
   service_facts:

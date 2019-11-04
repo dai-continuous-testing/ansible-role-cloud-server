@@ -4,7 +4,6 @@
   with_items:
   - installation_root_folder
   - service_plist_file_path
-  - temp_folder
 
 - name: stop the service
   command: "launchctl unload {{ service_plist_file_path }}"
@@ -14,13 +13,6 @@
   file:
     path: "{{ service_plist_file_path }}"
     state: absent
-  become: yes
-
-- name: remove temp folder
-  file:
-    path: "{{ temp_folder }}"
-    state: absent
-  when: clear_temp_folder | default('no') | bool
   become: yes
 
 - name: remove tracking files
