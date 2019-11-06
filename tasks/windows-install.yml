@@ -233,6 +233,13 @@
   notify:
     - start the service
 
+# always append error logs, not to overwrite files
+- name: enable stderr logs to append
+  win_command: "nssm set {{ service_name }} AppStderrCreationDisposition 4"
+  changed_when: no
+  ignore_errors: yes
+  become: yes
+
 # expose role output
 
 - name: sanitize role name
