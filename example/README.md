@@ -30,4 +30,7 @@ run the bootstrap.ps1 script in the target machine\
 NOTE:\
 *update username and password first*
 
+### After windows updates sometimes winrm service get stopped and reset, To fix winrm reset issues
+
+- run [ansible-role-winrm-startup](https://github.com/ExperitestOfficial/ansible-role-winrm-startup) role on all windows machines once.
 
