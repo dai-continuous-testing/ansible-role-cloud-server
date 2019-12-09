@@ -71,17 +71,21 @@
 
 # download the file
 
-- name: download zip from s3 url
+- name: validate checksum and download zip from s3 url
   win_get_url:
     url: "{{ s3_download_url }}"
+    checksum: "{{ lookup('url', s3_download_url + '.sha256') }}"
+    checksum_algorithm: sha256
     dest: "{{ temp_folder }}\\{{ installer_file_name }}"
     timeout: "{{ download_timeout | default(60) }}"
     force: no
   when: custom_download_url == ""
 
-- name: download zip from custom url
+- name: validate checksum and download zip from custom url
   win_get_url:
     url: "{{ custom_download_url }}"
+    checksum: "{{ lookup('url', custom_download_url + '.sha256') }}"
+    checksum_algorithm: sha256
     dest: "{{ temp_folder }}\\{{ installer_file_name }}"
     timeout: "{{ download_timeout | default(60) }}"
     force: no
