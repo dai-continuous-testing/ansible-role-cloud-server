@@ -3,6 +3,8 @@
 __installation_root_folder: "/Applications/Experitest"
 installation_folder: "{{ installation_root_folder }}/{{ app_name }}-{{ app_version }}"
 
+__installer_checksum: "{{ darwin_installer_checksum }}"
+
 temp_folder: "/tmp/experitest"
 
 service_name: "com.experitest.{{ app_name }}"

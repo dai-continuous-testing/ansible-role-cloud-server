@@ -11,9 +11,14 @@ required_modifiable_fields:
   - cloud_backup_dir
   - java_version
   - cloud_backup_dir
+  - installer_checksum
 
 app_name: cloudserver
-__app_version: 12.10.7560
+__app_version: 12.12.7794
+
+darwin_installer_checksum: "19837936957f275ecce16704f74196e65b55ad08e4d016f01ec5c56aa612702b"
+linux_installer_checksum: "b7549cc7dbd159717a7c8515733439500e66889cd16cc1c6226324bcf2547f9a"
+windows_installer_checksum: "85bcc3b673c693941909da4f61ebb4e69921f18f7c640774f20e848b56b37504"
 
 main_class: "com.experitest.cloudserver.CloudServerMain"
 

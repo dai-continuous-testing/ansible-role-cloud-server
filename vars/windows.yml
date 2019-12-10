@@ -3,6 +3,8 @@
 __installation_root_folder: "C:\\Experitest"
 installation_folder: "{{ installation_root_folder }}\\{{ app_name }}-{{ app_version }}"
 
+__installer_checksum: "{{ windows_installer_checksum }}"
+
 temp_folder: "c:\\temp\\experitest"
 
 service_name: "experitest-{{ app_name }}"

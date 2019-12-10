@@ -3,6 +3,8 @@
 __installation_root_folder: "/opt/Experitest"
 installation_folder: "{{ installation_root_folder }}/{{ app_name }}-{{ app_version }}"
 
+__installer_checksum: "{{ linux_installer_checksum }}"
+
 # https://superuser.com/questions/332610/where-is-the-temporary-directory-in-linux
 # /tmp      - temp folder
 # /var/tmp  - temp folder that is preservered after reboot
