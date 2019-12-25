@@ -231,6 +231,23 @@
 #   command: 'sudo /usr/sbin/installer -allowUntrusted -verboseR -dumplog -pkg "{{ hasp_installer }}" -target /'
 #   become: yes
 
+# remove vmoptions file
+
+- name: check vmoptions files to remove
+  find:
+    paths: "{{ installation_folder }}"
+    file_type: file
+    patterns: "*.vmoptions"
+  register: delete_vmoptions
+  become: yes
+
+- name: remove vmoptions files from installation folder
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  become: yes
+  with_items:
+    - "{{ delete_vmoptions.files }}"
 
 # expose role output
 
