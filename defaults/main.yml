@@ -13,7 +13,7 @@ required_modifiable_fields:
   - cloud_backup_dir
 
 app_name: cloudserver
-__app_version: 12.12.7794
+__app_version: 12.12.7908
 
 main_class: "com.experitest.cloudserver.CloudServerMain"
 
