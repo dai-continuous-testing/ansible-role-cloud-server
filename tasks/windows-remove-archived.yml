@@ -57,7 +57,6 @@
     path: "{{ installation_root_folder }}\\{{ item }}"
     state: absent
   with_items: "{{ old_versions.stdout_lines }}"
-  ignore_errors: yes
   when: 
     - item | regex_search("{{ app_name }}-")
     - item != "{{ app_name }}-{{ previous_version | default('invalid-version') }}"
