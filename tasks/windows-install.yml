@@ -48,6 +48,19 @@
     - /install
     - /passive
     - /norestart
+  async: 300
+  poll: 0
+  register: installer_vcredis
+  ignore_errors: yes
+  become: yes
+  
+- name: wait for installer visual c++ redistributable
+  async_status:
+    jid: "{{ installer_vcredis.ansible_job_id }}"
+  register: wait_for_installer_vc
+  until: wait_for_installer_vc.finished
+  retries: 30
+  delay: 10
   ignore_errors: yes
 
 # set temp folder
