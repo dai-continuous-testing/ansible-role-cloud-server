@@ -26,10 +26,16 @@
 
 # required dependencies
 
+- name: wait for any choco.exe process to finished 
+  win_wait_for_process:
+    process_name_exact: choco
+    state: absent
+    timeout: 180
+
 - name: install Chocolatey
   win_chocolatey:
     name: chocolatey
-    state: latest
+    state: present
 
 - name: disable enhanced exit codes
   win_chocolatey_feature:
@@ -39,6 +45,7 @@
 - name: install nssm dependency
   win_chocolatey:
     name: nssm
+    state: present
 
 - name: install visual c++ redistributable 2015 dependency
   win_package:
