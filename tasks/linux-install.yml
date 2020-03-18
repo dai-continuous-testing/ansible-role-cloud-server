@@ -70,7 +70,6 @@
       
   when: deployment_mode == "offline"
 
-
 # disable selinux and firewalld
 
 - name: disable selinux
