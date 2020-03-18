@@ -38,6 +38,8 @@ Role Variables
 | clear_before_install | removing old installation before installing new version | boolean | False | no |
 | kill_notepad | kill notepad/notepadd++ apps on windows | boolean | False | no |
 | cloud_backup_dir | the default path for the cloud backups | string | for mac: /Library/Application Support/Experitest/cloud-server <br> for windows: C:\\ProgramData\\cloud-server <br> for linux: /var/lib/Experitest/cloud-server | no |
+| deployment_mode | installation will be online or offline | online, offline | online | no |
+| shared_storage_folder | should be path of your shared storage to copy installers and common packages, when deployment_mode is offline | string | "" | when deployment_mode set to offline |
 
 Example Playbook
 ----------------

@@ -20,6 +20,8 @@ windows_installer_checksum: "76ac384658f926765f28b86db676dfa2eca4fbae0040cc17645
 
 main_class: "com.experitest.cloudserver.CloudServerMain"
 
+__deployment_mode: online
+
 __server_port: 8080
 __jmx_port: 51234
 
