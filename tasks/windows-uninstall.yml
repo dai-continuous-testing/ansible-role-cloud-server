@@ -33,10 +33,30 @@
   register: application_versions
   changed_when: no
 
-- name: remove application versions
-  win_file:
-    path: "{{ installation_root_folder }}\\{{ item }}"
-    state: absent
-  with_items: "{{ application_versions.stdout_lines }}"
-  when: 
-    - item | regex_search("{{ app_name }}-")
+- name: remove application version
+  block:
+
+    - name: remove application versions - first attempt
+      win_file:
+        path: "{{ installation_root_folder }}\\{{ item }}"
+        state: absent
+      with_items: "{{ application_versions.stdout_lines }}"
+      when: 
+        - item | regex_search("{{ app_name }}-")
+      register: remove_appver_first_try
+      ignore_errors: yes
+
+    - name: pause for 20 seconds if first attempt failed
+      pause:
+        seconds: 20
+      when: remove_appver_first_try.failed
+
+    - name: remove application versions - second attempt
+      win_file:
+        path: "{{ installation_root_folder }}\\{{ item }}"
+        state: absent
+      with_items: "{{ application_versions.stdout_lines }}"
+      when: 
+        - item | regex_search("{{ app_name }}-")
+        - remove_appver_first_try.failed
+      ignore_errors: yes

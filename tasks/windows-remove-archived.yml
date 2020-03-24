@@ -53,11 +53,33 @@
   changed_when: no
 
 - name: remove old versions
-  win_file:
-    path: "{{ installation_root_folder }}\\{{ item }}"
-    state: absent
-  with_items: "{{ old_versions.stdout_lines }}"
-  when: 
-    - item | regex_search("{{ app_name }}-")
-    - item != "{{ app_name }}-{{ previous_version | default('invalid-version') }}"
-    - item != "{{ app_name }}-{{ current_version | default('invalid-version') }}"
+  block:
+
+    - name: remove old versions - first attempt
+      win_file:
+        path: "{{ installation_root_folder }}\\{{ item }}"
+        state: absent
+      with_items: "{{ old_versions.stdout_lines }}"
+      when: 
+        - item | regex_search("{{ app_name }}-")
+        - item != "{{ app_name }}-{{ previous_version | default('invalid-version') }}"
+        - item != "{{ app_name }}-{{ current_version | default('invalid-version') }}"
+      register: remove_oldver_first_try
+      ignore_errors: yes
+  
+    - name: pause for 20 seconds if first attempt failed
+      pause:
+        seconds: 20
+      when: remove_oldver_first_try.failed
+  
+    - name: remove old versions - second attempt
+      win_file:
+        path: "{{ installation_root_folder }}\\{{ item }}"
+        state: absent
+      with_items: "{{ old_versions.stdout_lines }}"
+      when: 
+        - item | regex_search("{{ app_name }}-")
+        - item != "{{ app_name }}-{{ previous_version | default('invalid-version') }}"
+        - item != "{{ app_name }}-{{ current_version | default('invalid-version') }}"
+        - remove_oldver_first_try.failed
+      ignore_errors: yes    
