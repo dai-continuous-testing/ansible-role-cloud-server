@@ -153,10 +153,25 @@
   with_dict: "{{ xml_conf }}"
   become: yes
 
-- name: set permissions for logs folder
+- name: create logs folder inside installation_root_folder
+  file:
+    path: "{{ installation_root_folder }}/logs"
+    state: directory
+    mode: 0777
+    owner: "{{ ansible_user_id }}"
+  become: yes
+
+- name: remove existing logs folder from installation folder
   file:
     path: "{{ installation_folder }}/logs"
-    state: directory
+    state: absent
+  become: yes
+
+- name: create sym link for logs folder
+  file:
+    src: "{{ installation_root_folder }}/logs"
+    dest: "{{ installation_folder }}/logs"
+    state: link
     mode: 0777
     owner: "{{ ansible_user_id }}"
   become: yes
