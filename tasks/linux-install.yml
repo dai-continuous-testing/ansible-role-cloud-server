@@ -23,6 +23,7 @@
   - application_properties
   - xml_conf
   - extra_java_options
+  - logs_folder
 
 # required dependencies
 
@@ -193,9 +194,9 @@
   with_dict: "{{ xml_conf }}"
   become: yes
 
-- name: create logs folder inside installation_root_folder
+- name: make sure logs folder exists
   file:
-    path: "{{ installation_root_folder }}/logs"
+    path: "{{ logs_folder }}"
     state: directory
     mode: 0777
     owner: "{{ ansible_user_id }}"
@@ -209,7 +210,7 @@
 
 - name: create sym link for logs folder
   file:
-    src: "{{ installation_root_folder }}/logs"
+    src: "{{ logs_folder }}"
     dest: "{{ installation_folder }}/logs"
     state: link
     mode: 0777

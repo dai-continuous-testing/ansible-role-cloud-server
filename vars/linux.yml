@@ -8,6 +8,8 @@ installation_folder: "{{ installation_root_folder }}/{{ app_name }}-{{ app_versi
 # /var/tmp  - temp folder that is preservered after reboot
 temp_folder: /var/tmp/Experitest
 
+logs_folder: "/var/opt/Experitest/{{ app_name }}/logs"
+
 service_name: "{{ app_name }}.service"
 
 service_file_path: "/etc/systemd/system/{{ service_name }}"
