@@ -62,11 +62,19 @@
         dest: "{{ temp_folder }}/"
         remote_src: no
 
-    - name: make sure unzip and rsync is installed
-      shell: "yum localinstall -y {{ temp_folder }}/prereq_linux_common/*.rpm"
-      args:
-        executable: /bin/bash
-      become: yes
+    - name: get the list of rpm packages
+      find:
+        path: "{{ temp_folder }}/prereq_linux_common"
+        pattern: "*.rpm"
+        file_type: file
+      register: rpm_packages
+    
+    - name: make sure unzip, rsync and psmisc is installed
+      yum:
+        name: "{{ item.path }}"
+        state: present
+      with_items:
+        - "{{ rpm_packages.files }}"
       
   when: deployment_mode == "offline"
 
