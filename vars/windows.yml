@@ -5,6 +5,8 @@ installation_folder: "{{ installation_root_folder }}\\{{ app_name }}-{{ app_vers
 
 temp_folder: "c:\\temp\\experitest"
 
+logs_folder: "C:\\ProgramData\\Experitest\\{{ app_name }}\\logs"
+
 service_name: "experitest-{{ app_name }}"
 
 installer_file_name: "dist-Windows-SERVER-{{ app_version }}.zip"

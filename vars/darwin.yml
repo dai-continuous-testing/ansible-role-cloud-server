@@ -5,6 +5,8 @@ installation_folder: "{{ installation_root_folder }}/{{ app_name }}-{{ app_versi
 
 temp_folder: "/tmp/experitest"
 
+logs_folder: "/Library/Experitest/{{ app_name }}/logs"
+
 service_name: "com.experitest.{{ app_name }}"
 
 service_plist_file_path: "/Library/LaunchDaemons/{{ service_name }}.plist"
