@@ -17,11 +17,6 @@ relative_path: "cloud-server/osx"
 
 launcher_file_name: "start.sh"
 
-hasp_installer_tar_folder: "{{ installation_folder }}/bin/mac_hasp_install"
-
-hasp_installer_tar: "{{ hasp_installer_tar_folder }}/SentinelRuntime.tar"
-hasp_installer: "{{ hasp_installer_tar_folder }}/SentinelRuntimeInstaller.framework/Versions/A/Resources/Sentinel Runtime.pkg"
-
 __cloud_backup_dir: "/Library/Application Support/Experitest/cloud-server"
 
 java_download_filename: "jre{{ java_version }}-macosx-x64.tar.gz"

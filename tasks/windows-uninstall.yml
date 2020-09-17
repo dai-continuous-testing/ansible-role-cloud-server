@@ -13,7 +13,7 @@
     state: absent
   become: yes
 
-# uninstall hasp
+# uninstall hasp - sentinel remove
 - name: remove hasp installation
   win_command: '"{{ installation_folder }}\\bin\\haspdinst.exe" -r -fr -criticalmsg'
   become: yes

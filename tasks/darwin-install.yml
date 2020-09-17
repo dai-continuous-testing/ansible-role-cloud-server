@@ -218,21 +218,6 @@
   with_items:
     - "{{ delete_vmoptions.files }}"
 
-# install hasp
-
-- name: install hasp
-  block:
-    - name: tar the sentinel runtime
-      command: 'sudo /usr/bin/tar -xf {{ hasp_installer_tar }}'
-      args:
-        chdir: "{{ hasp_installer_tar_folder }}"
-      become: yes
-    
-    - name: run hasp installer
-      command: 'sudo /usr/sbin/installer -allowUntrusted -verboseR -dumplog -pkg "{{ hasp_installer }}" -target /'
-      become: yes
-  when: __license_type != "license4j"
-
 # expose role output
 
 - name: sanitize role name

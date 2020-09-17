@@ -240,13 +240,6 @@
 #     state: absent
 #   become: yes
 
-# install hasp
-
-# QUESTION install hasp in linux ?
-# - name: run hasp installer
-#   command: 'sudo /usr/sbin/installer -allowUntrusted -verboseR -dumplog -pkg "{{ hasp_installer }}" -target /'
-#   become: yes
-
 # remove vmoptions file
 
 - name: check vmoptions files to remove
