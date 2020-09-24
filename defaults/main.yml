@@ -70,7 +70,6 @@ __license_type: "{{ license_type | default('trial') }}"
 __license_valid_options: 
   - trial
   - license4j
-  - sentinel
 
 license4j_file_content: 
 
