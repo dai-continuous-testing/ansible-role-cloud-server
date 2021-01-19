@@ -7,6 +7,10 @@
 
 # VMOPTIONS=$(loadVmOptions start.vmoptions)
 
+# env var for mac Big Sur
+SYSTEM_VERSION_COMPAT=0
+export SYSTEM_VERSION_COMPAT=0
+
 # JAVA_PATH=$(/usr/libexec/java_home -v 1.8)
 JAVA_BIN={{ java_bin }}
 
