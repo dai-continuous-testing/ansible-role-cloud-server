@@ -17,13 +17,13 @@ launcher_file_name: "start.bat"
 
 __cloud_backup_dir: "C:\\ProgramData\\cloud-server"
 
-java_download_filename: "jre{{ java_version }}-windows-x64.zip"
+java_download_filename: "OpenJDK8U-jre_x64_windows_hotspot_{{ java_version }}.zip"
 
 java_relative_path: "java/windows"
 
 java_installation_folder: "{{ installation_root_folder }}\\jre"
 
-java_bin: "{{ java_installation_folder }}\\jre{{ java_version }}\\bin\\java.exe"
+java_bin: "{{ java_installation_folder }}\\jdk{{ java_version }}-jre\\bin\\java.exe"
 
 __custom_download_username: "myuser"
 __custom_download_password: "mypassword"
