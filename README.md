@@ -31,7 +31,7 @@ Role Variables
 | db_password | password for db connection | string |  | no |
 | installation_root_folder | the root folder in which the application will be installed under cloudserver-{version} folder | string | for mac: /Applications/Experitest <br> for windows: C:\\Experitest <br> for linux: /opt/Experitest | no |
 | jmx_port | port number for jmx inspection | number | 51234 | no |
-| java_version | java jre version to install | string | 1.8.0_181 | no |
+| java_version | java jre version to install | string | 8u292-b10 | no |
 | custom_download_url | custom url to download the installation from (zip format) | string |  | no |
 | custom_download_username | username to download from custom url on windows | string |  | no |
 | custom_download_password | password to download from custom url on windows | string |  | no |

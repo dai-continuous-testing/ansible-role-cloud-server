@@ -19,13 +19,13 @@ launcher_file_name: "start.sh"
 
 __cloud_backup_dir: "/Library/Application Support/Experitest/cloud-server"
 
-java_download_filename: "jre{{ java_version }}-macosx-x64.tar.gz"
+java_download_filename: "OpenJDK8U-jre_x64_mac_hotspot_{{ java_version }}.tar.gz"
 
 java_relative_path: "java/osx"
 
 java_installation_folder: "{{ installation_root_folder }}/jre"
 
-java_bin: "{{ java_installation_folder }}/jre{{ java_version }}.jre/Contents/Home/bin/java"
+java_bin: "{{ java_installation_folder }}/jdk{{ java_version }}-jre/Contents/Home/bin/java"
 
 __custom_download_username: "myuser"
 __custom_download_password: "mypassword"
