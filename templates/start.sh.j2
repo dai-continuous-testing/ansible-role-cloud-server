@@ -14,7 +14,7 @@ export SYSTEM_VERSION_COMPAT=0
 # JAVA_PATH=$(/usr/libexec/java_home -v 1.8)
 JAVA_BIN={{ java_bin }}
 
-$JAVA_BIN -cp ".:lib/*" \
+$JAVA_BIN -jar "lib/cloudserver-war-22.2.jar" \
     -Dcom.sun.jndi.ldap.object.disableEndpointIdentification=true \
     -Xmx2048m \
     -XX:+HeapDumpOnOutOfMemoryError \
@@ -33,5 +33,4 @@ $JAVA_BIN -cp ".:lib/*" \
     -Dcom.sun.management.jmxremote.ssl=false \
     -Dcom.sun.management.jmxremote.local.only=true \
     -Dcom.sun.management.jmxremote.authenticate=false \
-    {{ extra_java_options | join(' ') }} \
-    {{ main_class }}
+    {{ extra_java_options | join(' ') }}
