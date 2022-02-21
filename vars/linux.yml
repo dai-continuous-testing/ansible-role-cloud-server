@@ -18,7 +18,7 @@ installer_file_name: "dist-Linux-SERVER-{{ app_version }}.zip"
 
 relative_path: "cloud-server/linux"
 
-launcher_file_name: "start.sh"
+launcher_file_name: "cloudserver-war"
 
 __cloud_backup_dir: "/var/lib/Experitest/cloud-server"
 
@@ -27,6 +27,8 @@ java_download_filename: "OpenJDK8U-jre_x64_linux_hotspot_{{ java_version }}.tar.
 java_relative_path: "java/linux"
 
 java_installation_folder: "{{ installation_root_folder }}/jre"
+
+java_home: "{{ java_installation_folder }}/jdk{{ java_version }}-jre"
 
 java_bin: "{{ java_installation_folder }}/jdk{{ java_version }}-jre/bin/java"
 

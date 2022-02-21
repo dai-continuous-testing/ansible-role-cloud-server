@@ -27,7 +27,13 @@ __jmx_port: 51234
 
 __java_version: 8u292-b10
 
+
+base_java_options:
+  - "-Dcom.sun.management.jmxremote.port={{ jmx_port }}"
+
 extra_java_options: []
+
+java_options: "{{ base_java_options | combine(extra_java_options) }}"
 
 __db_connection_string: "jdbc:postgresql://localhost:5432/cloudserver"
 __db_username: postgres

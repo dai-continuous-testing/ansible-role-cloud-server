@@ -4,7 +4,9 @@ Description={{ app_name }} service
 
 [Service]
 WorkingDirectory={{ installation_folder }}
-ExecStart={{ installation_folder }}/{{ launcher_file_name }}
+Environment="JAVA_HOME={{java_home}}"
+Environment="CLOUDSERVER_WAR_OPTS={{java_options | join(' ')}}"
+ExecStart={{ installation_folder }}/bin/{{ launcher_file_name }}
 
 # ExecStop=/bin/pkill -15 java
 # StandardOutput=syslog
