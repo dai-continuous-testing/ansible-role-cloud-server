@@ -33,7 +33,7 @@ base_java_options:
 
 extra_java_options: []
 
-java_options: "{{ base_java_options | combine(extra_java_options) }}"
+java_options: "{{ base_java_options + [extra_java_options] }}"
 
 __db_connection_string: "jdbc:postgresql://localhost:5432/cloudserver"
 __db_username: postgres
