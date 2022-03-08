@@ -77,14 +77,14 @@
 # required java dependency
 
 - name: make sure java is installed on the machine
-  command: "{{ java_bin }} -version"
+  command: "{{ java_home }}/bin/java -version"
   register: java_test
   become: yes
   ignore_errors: yes
 
 - name: fail if java is not found
   fail:
-    msg: "java must be accesible in path {{ java_bin }}"
+    msg: "java must be accesible in path {{ java_home }}/bin/java"
   when: java_test.rc != 0
 
 # download the file
@@ -158,10 +158,9 @@
     dest: "{{ service_file_path }}"
   become: yes
 
-- name: copy start script
-  template:
-    src: start.sh.j2
-    dest: "{{ installation_folder }}/{{ launcher_file_name }}"
+- name: make sure launcher file exists
+  file:
+    path: "{{ installation_folder }}/bin/{{ launcher_file_name }}"
     mode: 0777
     owner: "{{ ansible_user_id }}"
   become: yes
