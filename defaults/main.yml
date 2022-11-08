@@ -25,7 +25,7 @@ main_class: "com.experitest.cloudserver.CloudServerMain"
 __server_port: 8080
 __jmx_port: 51234
 
-__java_version: 8u292-b10
+__java_version: 17.0.3_7
 
 
 base_java_options:
