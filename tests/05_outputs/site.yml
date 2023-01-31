@@ -16,6 +16,5 @@
         that: 
           - "ansible_role_cloud_server is defined"
           - "ansible_role_cloud_server.server_port is defined"
-          - "ansible_role_cloud_server.jmx_port is defined"
           - "ansible_role_cloud_server.installation_folder is defined"
           - "ansible_role_cloud_server.configuration_file is defined"

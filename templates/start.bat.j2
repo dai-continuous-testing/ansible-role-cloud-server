@@ -11,11 +11,6 @@
     -Dio.netty.noUnsafe=true ^
     -Djdk.nio.maxCachedBufferSize=262144 ^
     -Djava.net.preferIPv4Stack=true ^
-    -Dcom.sun.management.jmxremote ^
-    -Dcom.sun.management.jmxremote.port={{ jmx_port }} ^
-    -Dcom.sun.management.jmxremote.local.only=true ^
-    -Dcom.sun.management.jmxremote.authenticate=false ^
-    -Dcom.sun.management.jmxremote.ssl=false ^
     -Djava.library.path=.;bin; ^
     {{ extra_java_options | join(' ') }}
     
