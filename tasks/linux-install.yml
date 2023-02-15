@@ -101,15 +101,6 @@
     timeout: "{{ download_timeout | default(60) }}"
   when: custom_download_url != ""
 
-# stop old service
-
-- name: stop the old service
-  systemd:
-    name: "{{ service_name }}"
-    state: stopped
-  ignore_errors: yes
-  become: yes
-
 # delete old installation (optional)
 
 - name: clear old installation folder
@@ -256,24 +247,3 @@
       cloud_backup_dir: "{{ cloud_backup_dir }}"
       java_bin: "{{ java_bin }}"
       service_name: "{{ service_name }}"
-
-- name: start service
-  block:
-    - name: copy service file
-      template:
-        src: systemd.service.j2
-        dest: "{{ service_file_path }}"
-      become: yes
-      notify:
-        - start the service
-
-    - name: create sym link for logs folder
-      file:
-        src: "{{ logs_folder }}"
-        dest: "{{ installation_folder }}/logs"
-        state: link
-        mode: 0777
-        owner: "{{ ansible_user_id }}"
-      become: yes
-    
-  when: deploy == True

@@ -5,14 +5,21 @@
 
 - name: backup
   include_tasks: "tasks/{{ ansible_os_family | os_family_to_os_type }}-backup.yml"
+  when: 
+    - state|default('present') == 'present'
+    - deploy | default('true') | bool
 
 - name: install
   include_tasks: "tasks/{{ ansible_os_family | os_family_to_os_type }}-install.yml"
-  when: state|default('present') == 'present'
+  when: 
+    - state|default('present') == 'present'
+    - download | default('true') | bool
 
 - name: apply license
   include_tasks: "tasks/apply-license.yml"
-  when: state|default('present') == 'present'
+  when: 
+    - state|default('present') == 'present'
+    - download | default('true') | bool
 
 - name: clear temp folder
   include_tasks: "tasks/{{ ansible_os_family | os_family_to_os_type }}-clear-temp.yml"
@@ -22,13 +29,13 @@
   include_tasks: "tasks/{{ ansible_os_family | os_family_to_os_type }}-track-versions.yml"
   when: 
     - state|default('present') == 'present'
-    - deploy == True
+    - deploy | default('true') | bool
 
 - name: remove archived versions
   include_tasks: "tasks/{{ ansible_os_family | os_family_to_os_type }}-remove-archived.yml"
   when: 
     - state|default('present') == 'present'
-    - deploy == True
+    - deploy | default('true') | bool
 
 - name: uninstall
   include_tasks: "tasks/{{ ansible_os_family | os_family_to_os_type }}-uninstall.yml"

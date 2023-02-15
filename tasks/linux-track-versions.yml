@@ -8,8 +8,40 @@
   - installation_root_folder
   - app_name
   - app_version
+  - service_name
+  - installation_folder
+  - logs_folder
+  - service_file_path
 
-# 
+# update the service file
+- name: update the service
+  block:   
+    - name: stop the old service
+      systemd:
+        name: "{{ service_name }}"
+        state: stopped
+      ignore_errors: yes
+      become: yes
+
+    - name: create sym link for logs folder
+      file:
+        src: "{{ logs_folder }}"
+        dest: "{{ installation_folder }}/logs"
+        state: link
+        mode: 0777
+        owner: "{{ ansible_user_id }}"
+      become: yes
+
+    - name: copy service file
+      template:
+        src: systemd.service.j2
+        dest: "{{ service_file_path }}"
+      become: yes
+    
+    - name: notify to start service
+      command: echo "notify to start service..."
+      notify:
+        - start the service
 
 - name: test for current installation version
   stat:
