@@ -20,11 +20,15 @@
 
 - name: track versions
   include_tasks: "tasks/{{ ansible_os_family | os_family_to_os_type }}-track-versions.yml"
-  when: state|default('present') == 'present'
+  when: 
+    - state|default('present') == 'present'
+    - deploy == True
 
 - name: remove archived versions
   include_tasks: "tasks/{{ ansible_os_family | os_family_to_os_type }}-remove-archived.yml"
-  when: state|default('present') == 'present'
+  when: 
+    - state|default('present') == 'present'
+    - deploy == True
 
 - name: uninstall
   include_tasks: "tasks/{{ ansible_os_family | os_family_to_os_type }}-uninstall.yml"

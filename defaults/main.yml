@@ -100,3 +100,6 @@ java_download_url: "https://{{ cdn_name }}/{{ java_relative_path }}/{{ java_down
 # 
 
 #health_check_port: 33300
+
+# make deploy: False if you just want to install the package but not deploy.
+deploy: True
