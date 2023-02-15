@@ -14,7 +14,7 @@ required_modifiable_fields:
   - custom_download_password
 
 app_name: cloudserver
-__app_version: 22.3.14150
+__app_version: 23.1.17217
 
 linux_installer_checksum: "f3b79580e6998560e1e31066d7fcdbc2cf5b8d4b35c97855b64aa35b6c108028"
 windows_installer_checksum: "76ac384658f926765f28b86db676dfa2eca4fbae0040cc17645c8b3b4eab86fd"
@@ -97,3 +97,6 @@ java_download_url: "https://{{ cdn_name }}/{{ java_relative_path }}/{{ java_down
 # 
 
 #health_check_port: 33300
+
+# make deploy: False if you just want to install the package but not deploy.
+deploy: True

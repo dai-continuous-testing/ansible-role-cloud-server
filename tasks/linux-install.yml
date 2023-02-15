@@ -87,7 +87,6 @@
   when: java_test.rc != 0
 
 # download the file
-
 - name: download zip from s3 url
   get_url:
     url: "{{ s3_download_url }}"
@@ -148,14 +147,8 @@
 - name: synchronize zip content to installation folder
   command: "rsync -r {{ temp_folder }}/{{ (installer_file_name | splitext)[0] }}/{{ convention }}/ {{ installation_folder }}/"
   become: yes
-  notify:
-    - start the service
-
-- name: copy service file
-  template:
-    src: systemd.service.j2
-    dest: "{{ service_file_path }}"
-  become: yes
+  # notify:
+  #   - start the service
 
 - name: make sure launcher file exists
   file:
@@ -204,15 +197,6 @@
   file:
     path: "{{ installation_folder }}/logs"
     state: absent
-  become: yes
-
-- name: create sym link for logs folder
-  file:
-    src: "{{ logs_folder }}"
-    dest: "{{ installation_folder }}/logs"
-    state: link
-    mode: 0777
-    owner: "{{ ansible_user_id }}"
   become: yes
 
 # set permission to zipalign file
@@ -272,3 +256,24 @@
       cloud_backup_dir: "{{ cloud_backup_dir }}"
       java_bin: "{{ java_bin }}"
       service_name: "{{ service_name }}"
+
+- name: start service
+  block:
+    - name: copy service file
+      template:
+        src: systemd.service.j2
+        dest: "{{ service_file_path }}"
+      become: yes
+      notify:
+        - start the service
+
+    - name: create sym link for logs folder
+      file:
+        src: "{{ logs_folder }}"
+        dest: "{{ installation_folder }}/logs"
+        state: link
+        mode: 0777
+        owner: "{{ ansible_user_id }}"
+      become: yes
+    
+  when: deploy == True
