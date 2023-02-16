@@ -3,6 +3,7 @@
 
 - name: assert all vars are set
   assert: { that: "{{ item }} != '' " }
+  quiet: true
   with_items:
   - installation_root_folder
   - app_name

@@ -3,6 +3,7 @@
 
 - name: assert all vars are set
   assert: { that: "{{ item }} != '' " }
+  quiet: true
   with_items:
   - app_name
   - clear_temp_folder
