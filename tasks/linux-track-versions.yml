@@ -3,13 +3,47 @@
 # validation
 
 - name: assert all vars are set
-  assert: { that: "{{ item }} != '' " }
+  assert: 
+    that: "{{ item }} != '' " 
+    quiet: true
   with_items:
   - installation_root_folder
   - app_name
   - app_version
+  - service_name
+  - installation_folder
+  - logs_folder
+  - service_file_path
 
-# 
+# update the service file
+- name: update the service
+  block:   
+    - name: stop the old service
+      systemd:
+        name: "{{ service_name }}"
+        state: stopped
+      ignore_errors: yes
+      become: yes
+
+    - name: create sym link for logs folder
+      file:
+        src: "{{ logs_folder }}"
+        dest: "{{ installation_folder }}/logs"
+        state: link
+        mode: 0777
+        owner: "{{ ansible_user_id }}"
+      become: yes
+
+    - name: copy service file
+      template:
+        src: systemd.service.j2
+        dest: "{{ service_file_path }}"
+      become: yes
+    
+    - name: notify to start service
+      command: echo "notify to start service..."
+      notify:
+        - start the service
 
 - name: test for current installation version
   stat:
@@ -43,3 +77,20 @@
     dest: "{{ installation_root_folder }}/{{ app_name }}-current"
     content: "{{ app_version }}"
   become: yes
+
+
+
+- name: sanitize role name
+  set_fact:
+    sanitize_role_name: "{{ role_name | replace('-', '_') | regex_replace('([^A-Za-z0-9_])', '') | trim }}"
+
+- name: expose role output
+  set_fact:
+    "{{ sanitize_role_name }}":
+      server_port: "{{ server_port }}"
+      installation_folder: "{{ installation_folder }}"
+      configuration_file: "{{ installation_folder }}/conf/application.properties"
+      configuration_xml_file: "{{ installation_folder }}/conf/cloudagent.conf.xml"
+      cloud_backup_dir: "{{ cloud_backup_dir }}"
+      java_bin: "{{ java_bin }}"
+      service_name: "{{ service_name }}"

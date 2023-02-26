@@ -30,7 +30,6 @@ Role Variables
 | db_username | username for db connection | string | postgres | no |
 | db_password | password for db connection | string |  | no |
 | installation_root_folder | the root folder in which the application will be installed under cloudserver-{version} folder | string | for mac: /Applications/Experitest <br> for windows: C:\\Experitest <br> for linux: /opt/Experitest | no |
-| jmx_port | port number for jmx inspection | number | 51234 | no |
 | java_version | java jre version to install | string | 8u292-b10 | no |
 | custom_download_url | custom url to download the installation from (zip format) | string |  | no |
 | custom_download_username | username to download from custom url on windows | string |  | no |
@@ -40,7 +39,8 @@ Role Variables
 | clear_before_install | removing old installation before installing new version | boolean | False | no |
 | kill_notepad | kill notepad/notepadd++ apps on windows | boolean | False | no |
 | cloud_backup_dir | the default path for the cloud backups | string | for mac: /Library/Application Support/Experitest/cloud-server <br> for windows: C:\\ProgramData\\cloud-server <br> for linux: /var/lib/Experitest/cloud-server | no |
-
+| download | only download the release version | boolean | True | no |
+| deploy | only deploy the release version | boolean | True | no |
 Example Playbook
 ----------------
 ### [see working example](/example)

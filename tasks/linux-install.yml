@@ -2,7 +2,9 @@
 # validation
 
 - name: assert all vars are set
-  assert: { that: "{{ item }} != '' " }
+  assert: 
+    that: "{{ item }} != '' " 
+    quiet: true
   with_items:
   - app_name
   - clear_temp_folder
@@ -11,7 +13,6 @@
   - installation_folder
   - clear_before_install
   - server_port
-  - jmx_port
   - service_file_path
   - installer_file_name
   - ansible_user_id
@@ -88,7 +89,6 @@
   when: java_test.rc != 0
 
 # download the file
-
 - name: download zip from s3 url
   get_url:
     url: "{{ s3_download_url }}"
@@ -102,15 +102,6 @@
     dest: "{{ temp_folder }}/{{ installer_file_name }}"
     timeout: "{{ download_timeout | default(60) }}"
   when: custom_download_url != ""
-
-# stop old service
-
-- name: stop the old service
-  systemd:
-    name: "{{ service_name }}"
-    state: stopped
-  ignore_errors: yes
-  become: yes
 
 # delete old installation (optional)
 
@@ -149,14 +140,8 @@
 - name: synchronize zip content to installation folder
   command: "rsync -r {{ temp_folder }}/{{ (installer_file_name | splitext)[0] }}/{{ convention }}/ {{ installation_folder }}/"
   become: yes
-  notify:
-    - start the service
-
-- name: copy service file
-  template:
-    src: systemd.service.j2
-    dest: "{{ service_file_path }}"
-  become: yes
+  # notify:
+  #   - start the service
 
 - name: make sure launcher file exists
   file:
@@ -207,15 +192,6 @@
     state: absent
   become: yes
 
-- name: create sym link for logs folder
-  file:
-    src: "{{ logs_folder }}"
-    dest: "{{ installation_folder }}/logs"
-    state: link
-    mode: 0777
-    owner: "{{ ansible_user_id }}"
-  become: yes
-
 # set permission to zipalign file
 
 - name: check the zipalign file exists
@@ -257,20 +233,4 @@
   with_items:
     - "{{ delete_vmoptions.files }}"
 
-# expose role output
 
-- name: sanitize role name
-  set_fact:
-    sanitize_role_name: "{{ role_name | replace('-', '_') | regex_replace('([^A-Za-z0-9_])', '') | trim }}"
-
-- name: expose role output
-  set_fact:
-    "{{ sanitize_role_name }}":
-      server_port: "{{ server_port }}"
-      jmx_port: "{{ jmx_port }}"
-      installation_folder: "{{ installation_folder }}"
-      configuration_file: "{{ installation_folder }}/conf/application.properties"
-      configuration_xml_file: "{{ installation_folder }}/conf/cloudagent.conf.xml"
-      cloud_backup_dir: "{{ cloud_backup_dir }}"
-      java_bin: "{{ java_bin }}"
-      service_name: "{{ service_name }}"
