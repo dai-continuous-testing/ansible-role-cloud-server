@@ -1,0 +1,8 @@
+- name: make sure prerequisites are installed
+  apt:
+    name: "{{ item }}"
+    state: present
+  become: yes
+  with_items:
+    - rsync
+    - unzip
