@@ -1,7 +1,15 @@
 ---
 
+- name: Fail if os family is not redhat or debian or windows
+  fail:
+    msg: Current role does not support on {{ ansible_os_family | lower }}, It only supports CentOS/RedHat, Debian and Windows hosts.
+  when: (ansible_os_family | lower) not in ['redhat', 'debian', 'windows']
+
 - name: validate vars
   include_tasks: tasks/variables.yml
+
+- name: prerequisite
+  include_tasks: "tasks/{{ ansible_os_family | lower }}-prerequisite.yml"
 
 - name: backup
   include_tasks: "tasks/{{ ansible_os_family | os_family_to_os_type }}-backup.yml"

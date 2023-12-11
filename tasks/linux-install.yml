@@ -26,45 +26,6 @@
   - extra_java_options
   - logs_folder
 
-# required dependencies
-
-- name: make sure epel-release is installed
-  yum:
-    name: epel-release
-    state: present
-    lock_timeout: 180
-  become: yes
-
-- name: make sure rsync is installed
-  yum:
-    name: rsync
-    state: present
-    lock_timeout: 180
-  become: yes
-
-- name: make sure unzip is installed
-  yum:
-    name: unzip
-    state: present
-    lock_timeout: 180
-  become: yes
-
-# disable selinux and firewalld
-
-- name: disable selinux
-  selinux:
-    state: disabled
-  become: yes
-   
-- name: stop and disable firewall     ## need to discuss on disabling firewall service
-  systemd:
-    name: "{{ item }}"
-    state: stopped
-    enabled: no
-  become: yes
-  ignore_errors: yes
-  with_items:
-    - firewalld
 
 # set temp folder
 
