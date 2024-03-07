@@ -29,10 +29,6 @@
     - state|default('present') == 'present'
     - download | default('true') | bool
 
-- name: clear temp folder
-  include_tasks: "tasks/{{ ansible_os_family | os_family_to_os_type }}-clear-temp.yml"
-  when: clear_temp_folder | default('no') | bool
-
 - name: track versions
   include_tasks: "tasks/{{ ansible_os_family | os_family_to_os_type }}-track-versions.yml"
   when: 
@@ -45,6 +41,12 @@
     - state|default('present') == 'present'
     - deploy | default('true') | bool
 
+- name: clear temp folder
+  include_tasks: "tasks/{{ ansible_os_family | os_family_to_os_type }}-clear-temp.yml"
+  when: 
+    - clear_temp_folder | default('no') | bool
+    - deploy | default('true') | bool
+  
 - name: uninstall
   include_tasks: "tasks/{{ ansible_os_family | os_family_to_os_type }}-uninstall.yml"
   when: state|default('present') == 'absent'
