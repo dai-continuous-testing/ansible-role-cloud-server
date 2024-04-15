@@ -72,6 +72,7 @@ logback_properties: "{{ extra_logback_properties }}"
 __license_type: "{{ license_type | default('trial') }}"
 __license_valid_options: 
   - trial
+  - spring
   - license4j
 
 license4j_file_content: 

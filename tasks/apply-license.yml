@@ -86,3 +86,27 @@
   when: 
     - __license_type == "license4j"
     - ansible_os_family != "Windows"
+
+- name: apply spring license (non win)
+  block:
+
+    # remove license 4j file
+    - name: copy licese to remote
+      file:
+        path: "{{ installation_folder }}/conf/l4jlicense.txt"
+        state: absent
+      become: yes
+
+    # remove key from conf file trial-license-key
+    - name: remove trial key from conf file
+      lineinfile:
+        state: absent
+        path: "{{ installation_folder }}/conf/cloudserver.conf.xml"
+        regexp: "<file-license>.*<\\/file-license>"
+      become: yes
+
+  when:
+    - __license_type == "spring"
+    - ansible_os_family != "Windows"
+
+
