@@ -14,7 +14,7 @@ required_modifiable_fields:
   - custom_download_password
 
 app_name: cloudserver
-__app_version: 25.3.23219
+__app_version: 25.3.23299
 
 linux_installer_checksum: "f3b79580e6998560e1e31066d7fcdbc2cf5b8d4b35c97855b64aa35b6c108028"
 windows_installer_checksum: "76ac384658f926765f28b86db676dfa2eca4fbae0040cc17645c8b3b4eab86fd"
