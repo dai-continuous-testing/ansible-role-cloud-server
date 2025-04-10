@@ -12,9 +12,11 @@
 
 - name: assert all vars are set
   assert: 
-    that: "{{ item }} != '' " 
+    that:
+      - item is defined
+      - item | length > 0
     quiet: true
-  with_items:
+  loop:
   - db_connection_string
   - db_username
   # - db_password

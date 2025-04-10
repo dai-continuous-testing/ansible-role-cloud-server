@@ -3,9 +3,11 @@
 
 - name: assert all vars are set
   assert: 
-    that: "{{ item }} != '' " 
+    that:
+      - item is defined
+      - item | length > 0
     quiet: true
-  with_items:
+  loop:
   - app_name
   - clear_temp_folder
   - service_name
