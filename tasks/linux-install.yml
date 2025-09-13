@@ -116,20 +116,50 @@
 # configure installed 
 
 - name: update application properties file
-  lineinfile:
+  application_properties:
     path: "{{ installation_folder }}/conf/application.properties"
-    line: "{{ item.key }}={{ item.value }}"
-    regexp: "^{{ item.key | replace('.', '\\.') }}="
-  with_dict: "{{ application_properties }}"
+    properties: "{{ application_properties }}"
+    backup: yes
+    comment_existing: yes
+    marker: "ANSIBLE MANAGED BLOCK - Application Properties"
   become: yes
 
-- name: update logback properties file
-  lineinfile:
-    path: "{{ installation_folder }}/conf/logback.properties"
-    line: "{{ item.key }}={{ item.value }}"
-    regexp: "^{{ item.key | replace('.', '\\.') }}="
-  with_dict: "{{ logback_properties }}"
+- name: verify application properties file exists
+  stat:
+    path: "{{ installation_folder }}/conf/application.properties"
+  register: app_properties_file_stat
   become: yes
+
+- name: ensure application properties file is accessible
+  assert:
+    that:
+      - app_properties_file_stat.stat.exists
+      - app_properties_file_stat.stat.readable
+    fail_msg: "Application properties file not found or not readable"
+    success_msg: "Application properties file successfully created/updated"
+
+- name: update logback properties file
+  application_properties:
+    path: "{{ installation_folder }}/conf/logback.properties"
+    properties: "{{ logback_properties }}"
+    backup: yes
+    comment_existing: yes
+    marker: "ANSIBLE MANAGED BLOCK - Logback Properties"
+  become: yes
+
+- name: verify logback properties file exists
+  stat:
+    path: "{{ installation_folder }}/conf/logback.properties"
+  register: logback_properties_file_stat
+  become: yes
+
+- name: ensure logback properties file is accessible
+  assert:
+    that:
+      - logback_properties_file_stat.stat.exists
+      - logback_properties_file_stat.stat.readable
+    fail_msg: "Logback properties file not found or not readable"
+    success_msg: "Logback properties file successfully created/updated"
 
 - name: update xml conf
   lineinfile:
