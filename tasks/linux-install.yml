@@ -116,20 +116,50 @@
 # configure installed 
 
 - name: update application properties file
-  lineinfile:
+  dai_continuous_testing.utilities.application_properties:
     path: "{{ installation_folder }}/conf/application.properties"
-    line: "{{ item.key }}={{ item.value }}"
-    regexp: "^{{ item.key | replace('.', '\\.') }}="
-  with_dict: "{{ application_properties }}"
+    properties: "{{ application_properties }}"
+    backup: yes
+    comment_existing: yes
+    marker: "ANSIBLE MANAGED BLOCK - Application Properties"
   become: yes
 
-- name: update logback properties file
-  lineinfile:
-    path: "{{ installation_folder }}/conf/logback.properties"
-    line: "{{ item.key }}={{ item.value }}"
-    regexp: "^{{ item.key | replace('.', '\\.') }}="
-  with_dict: "{{ logback_properties }}"
+- name: verify application properties file exists
+  stat:
+    path: "{{ installation_folder }}/conf/application.properties"
+  register: app_properties_file_stat
   become: yes
+
+- name: ensure application properties file is accessible
+  assert:
+    that:
+      - app_properties_file_stat.stat.exists
+      - app_properties_file_stat.stat.readable
+    fail_msg: "Application properties file not found or not readable"
+    success_msg: "Application properties file successfully created/updated"
+
+- name: update logback properties file
+  dai_continuous_testing.utilities.application_properties:
+    path: "{{ installation_folder }}/conf/logback.properties"
+    properties: "{{ logback_properties }}"
+    backup: yes
+    comment_existing: yes
+    marker: "ANSIBLE MANAGED BLOCK - Logback Properties"
+  become: yes
+
+- name: verify logback properties file exists
+  stat:
+    path: "{{ installation_folder }}/conf/logback.properties"
+  register: logback_properties_file_stat
+  become: yes
+
+- name: ensure logback properties file is accessible
+  assert:
+    that:
+      - logback_properties_file_stat.stat.exists
+      - logback_properties_file_stat.stat.readable
+    fail_msg: "Logback properties file not found or not readable"
+    success_msg: "Logback properties file successfully created/updated"
 
 - name: update xml conf
   lineinfile:
@@ -195,5 +225,51 @@
   become: yes
   with_items:
     - "{{ delete_vmoptions.files }}"
+
+# Health check after installation  
+- name: verify cloud server health after installation
+  dai_continuous_testing.utilities.health_check:
+    url: "http://localhost:{{ server_port }}{{ health_check_uri | default('/manage/health') }}"
+    expected_status: 200
+    timeout: 30
+    max_retries: 15
+    delay_between_tries: 10
+    initial_delay: 30
+    headers:
+      Accept: "application/json"
+      User-Agent: "Ansible-CloudServer-HealthCheck"
+  register: cloudserver_health_check
+  when: start_after_install | default(true)
+  ignore_errors: yes
+
+- name: verify cloud server prometheus metrics endpoint
+  dai_continuous_testing.utilities.health_check:
+    url: "http://localhost:{{ management_port | default('33300') }}/manage/prometheus"
+    expected_status: 200
+    timeout: 15
+    max_retries: 5
+    delay_between_tries: 3
+  register: cloudserver_metrics_check
+  when: 
+    - start_after_install | default(true)
+    - cloudserver_health_check.success | default(false)
+  ignore_errors: yes
+
+- name: display comprehensive health check results
+  debug:
+    msg: |
+      Cloud Server Health Check Results:
+      =====================================
+      Main Health Check:
+        Status: {{ 'PASSED' if cloudserver_health_check.success | default(false) else 'FAILED' }}
+        URL: {{ cloudserver_health_check.url | default('N/A') }}
+        Message: {{ cloudserver_health_check.msg | default('Health check was not performed') }}
+        Attempts: {{ cloudserver_health_check.failed_attempts | default(0) + 1 if cloudserver_health_check.failed_attempts is defined else 'N/A' }}
+      
+      Prometheus Metrics Check:
+        Status: {{ 'PASSED' if cloudserver_metrics_check.success | default(false) else 'SKIPPED/FAILED' }}
+        URL: {{ cloudserver_metrics_check.url | default('N/A') }}
+        Message: {{ cloudserver_metrics_check.msg | default('Metrics check was not performed') }}
+  when: cloudserver_health_check is defined
 
 
