@@ -61,13 +61,12 @@ extra_xml_conf: {}
 
 xml_conf: "{{ base_xml_conf | combine(extra_xml_conf) }}"
 
-#
-
+# Logback configuration
+base_logback_properties: {}
 extra_logback_properties: {}
 
-logback_properties: "{{ extra_logback_properties }}"
+logback_properties: "{{ base_logback_properties | combine(extra_logback_properties) }}"
 
-#
 
 __license_type: "{{ license_type | default('trial') }}"
 __license_valid_options: 
