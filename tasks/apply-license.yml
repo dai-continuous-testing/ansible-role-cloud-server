@@ -105,6 +105,14 @@
         regexp: "<file-license>.*<\\/file-license>"
       become: yes
 
+    - name: copy licese to remote
+      copy:
+        content: "{{ spring_license_file_content }}"
+        dest: "{{ installation_folder }}/conf/license.key"
+        owner: root
+        group: root
+        mode: 0644
+      become: yes
   when:
     - __license_type == "spring"
     - ansible_os_family != "Windows"
