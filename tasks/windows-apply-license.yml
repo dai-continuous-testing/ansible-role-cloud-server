@@ -1,0 +1,82 @@
+
+# validation
+
+- name: assert valid license type
+  fail:
+    msg: "license type '{{ __license_type }}' is not valid. Valid options are: {{ __license_valid_options | join(', ') }}"
+  when: __license_type not in __license_valid_options
+
+- name: assert license4j_file_content is provided for license4j license type
+  fail:
+    msg: "license4j_file_content is required and must not be empty when license_type is 'license4j'"
+  when: 
+    - __license_type == "license4j"
+    - license4j_file_content is not defined or license4j_file_content == '' or license4j_file_content is none
+
+- name: assert spring_license_file_content is provided for spring license type
+  fail:
+    msg: "spring_license_file_content is required and must not be empty when license_type is 'spring'"
+  when: 
+    - __license_type == "spring"
+    - spring_license_file_content is not defined or spring_license_file_content == '' or spring_license_file_content is none
+
+# apply
+
+- name: apply trial license
+  block:
+    
+   # remove license 4j file
+    - name: remove license file
+      win_file:
+        path: "{{ installation_folder }}\\conf\\l4jlicense.txt"
+        state: absent
+      become: yes
+
+  when: __license_type == "trial"
+
+- name: apply license4j license
+  block:
+    
+    # remove key from conf file trial-license-key
+    - name: remove trial key from conf file
+      win_lineinfile:
+        state: absent
+        path: "{{ installation_folder }}\\conf\\cloudserver.conf.xml"
+        regexp: "<trial-license-key>.*<\\/trial-license-key>"
+      become: yes
+
+    # copy content of license to file
+    - name: copy license to remote
+      win_copy:
+        content: "{{ license4j_file_content }}"
+        dest: "{{ installation_folder }}\\conf\\l4jlicense.txt"
+      become: yes
+
+  when: __license_type == "license4j"
+
+- name: apply spring license
+  block:
+
+    # remove license 4j file
+    - name: remove license4j file
+      win_file:
+        path: "{{ installation_folder }}\\conf\\l4jlicense.txt"
+        state: absent
+      become: yes
+
+    # remove key from conf file trial-license-key
+    - name: remove trial key from conf file
+      win_lineinfile:
+        state: absent
+        path: "{{ installation_folder }}\\conf\\cloudserver.conf.xml"
+        regexp: "<file-license>.*<\\/file-license>"
+      become: yes
+
+    - name: copy license to remote
+      win_copy:
+        content: "{{ spring_license_file_content }}"
+        dest: "{{ installation_folder }}\\conf\\license.key"
+      become: yes
+  when: __license_type == "spring"
+
+

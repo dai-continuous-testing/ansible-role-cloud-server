@@ -24,7 +24,7 @@
     - download | default('true') | bool
 
 - name: apply license
-  include_tasks: "tasks/apply-license.yml"
+  include_tasks: "tasks/{{ ansible_os_family | os_family_to_os_type }}-apply-license.yml"
   when: 
     - state|default('present') == 'present'
     - download | default('true') | bool
