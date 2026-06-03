@@ -53,16 +53,16 @@ otel_java_options:
   - "-Dotel.metrics.exporter=none"
   - "-Dotel.logs.exporter=none"
 
-# This logic adds otel options to extra_java_options ONLY if otel_enabled is true
-extra_java_options: "{{ otel_java_options if otel_enabled else [] }}"
+# Keep user-provided extra JVM options separate from OTEL options
+extra_java_options: []
 
-### Add OTel and extra java options seperately ###
+# Add OTEL options only when enabled
+enabled_otel_java_options: "{{ otel_java_options if otel_enabled else [] }}"
 
 base_java_options: []
 
-# extra_java_options: []
-
-java_options: "{{ base_java_options + extra_java_options }}"
+# Final JVM options used by startup scripts/templates
+java_options: "{{ base_java_options + extra_java_options + enabled_otel_java_options }}"
 
 __db_connection_string: "jdbc:postgresql://localhost:5432/cloudserver"
 __db_username: postgres
