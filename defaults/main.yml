@@ -50,8 +50,8 @@ otel_java_options:
   - "-Dotel.resource.attributes=deployment.environment={{ otel_environment }},service.namespace={{ otel_namespace }},customer={{ otel_customer }}"
   - "-Dotel.exporter.otlp.endpoint={{ otel_alloy_endpoint }}"
   - "-Dotel.exporter.otlp.protocol=grpc"
-  - "-Dotel.metrics.exporter=none"
-  - "-Dotel.logs.exporter=none"
+  - "-Dotel.metrics.exporter=otlp"
+  - "-Dotel.logs.exporter=otlp"
 
 # Keep user-provided extra JVM options separate from OTEL options
 extra_java_options: []
