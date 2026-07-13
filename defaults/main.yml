@@ -26,11 +26,43 @@ __server_port: 8080
 __java_version: 17.0.18_8
 
 
-base_java_options: []
+# OpenTelemetry Configuration
+otel_enabled: false
+otel_version: "2.23.0"
+otel_download_url: "https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v{{ otel_version }}/opentelemetry-javaagent.jar"
+otel_jar_name: "opentelemetry-javaagent.jar"
+# Where the jar will be stored (make sure to define otel_jar_directory in vars/os specific files or default here)
+otel_jar_full_path: "{{ installation_root_folder }}/otel/{{ otel_jar_name }}"
 
+otel_service_name: "{{ app_name }}"
+otel_environment: "prod"
+otel_namespace: "daict"
+otel_customer: "default"
+otel_alloy_endpoint: "http://{{ otel_alloy_host }}:{{ otel_alloy_port }}"
+otel_alloy_host: "localhost"
+otel_alloy_port: 4317
+
+
+# Define the OTEL options as a list
+otel_java_options:
+  - "-javaagent:{{ otel_jar_full_path }}"
+  - "-Dotel.service.name={{ otel_service_name }}"
+  - "-Dotel.resource.attributes=deployment.environment={{ otel_environment }},service.namespace={{ otel_namespace }},customer={{ otel_customer }}"
+  - "-Dotel.exporter.otlp.endpoint={{ otel_alloy_endpoint }}"
+  - "-Dotel.exporter.otlp.protocol=grpc"
+  - "-Dotel.metrics.exporter=otlp"
+  - "-Dotel.logs.exporter=otlp"
+
+# Keep user-provided extra JVM options separate from OTEL options
 extra_java_options: []
 
-java_options: "{{ base_java_options + extra_java_options }}"
+# Add OTEL options only when enabled
+enabled_otel_java_options: "{{ otel_java_options if otel_enabled else [] }}"
+
+base_java_options: []
+
+# Final JVM options used by startup scripts/templates
+java_options: "{{ base_java_options + extra_java_options + enabled_otel_java_options }}"
 
 __db_connection_string: "jdbc:postgresql://localhost:5432/cloudserver"
 __db_username: postgres
