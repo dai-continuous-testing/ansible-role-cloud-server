@@ -176,6 +176,7 @@
     src: "{{ logs_folder }}"
     dest: "{{ installation_folder }}/logs"
     state: link
+    force: yes
     mode: 0777
     owner: "{{ ansible_user_id }}"
   become: yes
