@@ -74,6 +74,7 @@ __db_password: ""
 
 base_application_properties:
   - "server.port": "{{ server_port }}"
+  - "ct.cloud.backup-base-dir": "{{ cloud_backup_dir }}"
   - "spring.datasource.url": "{{ db_connection_string }}"
   - "spring.datasource.username": "{{ db_username }}"
   - "spring.datasource.password": "{{ db_password }}"   
@@ -82,16 +83,6 @@ base_application_properties:
 extra_application_properties: {}
 
 application_properties: "{{ base_application_properties | combine(extra_application_properties) }}"
-
-# 
-
-base_xml_conf:
-  - "main-port": "{{ server_port }}"
-  - "cloud-backup-base-dir": "{{ cloud_backup_dir }}"
-
-extra_xml_conf: {}
-
-xml_conf: "{{ base_xml_conf | combine(extra_xml_conf) }}"
 
 # Logback configuration
 base_logback_properties: {}

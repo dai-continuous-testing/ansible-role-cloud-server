@@ -24,7 +24,6 @@
   - db_username
   # - db_password
   - application_properties
-  - xml_conf
   - extra_java_options
   - logs_folder
 
@@ -177,16 +176,6 @@
     fail_msg: "Logback properties file not found or not readable"
     success_msg: "Logback properties file successfully created/updated"
 
-- name: update xml conf
-  lineinfile:
-    state: present
-    path: "{{ installation_folder }}/conf/cloudserver.conf.xml"
-    line: "<{{ item.key }}>{{ item.value }}</{{ item.key }}>"
-    regexp: "<{{ item.key }}>.*<\\/{{ item.key }}>"
-    insertbefore:  "<\\/forwarder-configuration>"
-  with_dict: "{{ xml_conf }}"
-  become: yes
-
 - name: make sure logs folder exists
   file:
     path: "{{ logs_folder }}"
@@ -287,5 +276,4 @@
         URL: {{ cloudserver_metrics_check.url | default('N/A') }}
         Message: {{ cloudserver_metrics_check.msg | default('Metrics check was not performed') }}
   when: cloudserver_health_check is defined
-
 

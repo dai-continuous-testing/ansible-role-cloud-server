@@ -23,7 +23,6 @@
   - db_username
   # - db_password
   - application_properties
-  - xml_conf
   - extra_java_options
   - kill_notepad
   - logs_folder
@@ -238,16 +237,6 @@
   with_dict: "{{ logback_properties }}"
   become: yes
 
-- name: update xml conf
-  win_lineinfile:
-    state: present
-    path: "{{ installation_folder }}/conf/cloudserver.conf.xml"
-    line: "<{{ item.key }}>{{ item.value }}</{{ item.key }}>"
-    regexp: "<{{ item.key }}>.*<\\/{{ item.key }}>"
-    insertbefore:  "<\\/forwarder-configuration>"
-  with_dict: "{{ xml_conf }}"
-  become: yes
-
 - name: make sure logs folder exists
   win_file:
     path: "{{ logs_folder }}"
@@ -322,7 +311,6 @@
       server_port: "{{ server_port }}"
       installation_folder: "{{ installation_folder }}"
       configuration_file: "{{ installation_folder }}\\conf\\application.properties"
-      configuration_xml_file: "{{ installation_folder }}\\conf\\cloudserver.conf.xml"
       cloud_backup_dir: "{{ cloud_backup_dir }}"
       java_bin: "{{ java_bin }}"
       service_name: "{{ service_name }}"
