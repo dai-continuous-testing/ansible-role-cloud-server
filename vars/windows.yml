@@ -15,7 +15,7 @@ relative_path: "cloud-server/windows"
 
 launcher_file_name: "start.bat"
 
-__cloud_backup_dir: "C:\\ProgramData\\cloud-server"
+__cloud_backup_dir: "C:/ProgramData/cloud-server"
 
 java_download_filename: "OpenJDK8U-jre_x64_windows_hotspot_{{ java_version }}.zip"
 

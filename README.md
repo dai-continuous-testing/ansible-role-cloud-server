@@ -22,7 +22,6 @@ Role Variables
 | server_port | port number for the server |           number           | 8080 | no |
 | extra_application_properties | additional props to be override in application.properties file |            dict            | {} | no |
 | extra_logback_properties | additional props to be override in logback.properties file |            dict            | {} | no |
-| extra_xml_conf | extend xml configuration |            dict            | {} | no |
 | extra_java_options | extand java options |      array of strings      | [] | no |
 | license_type | license type | trial \ license4j \ spring | trial | no |
 | license4j_file_content | license file content |           string           |  | when license_type is license4j |
@@ -38,7 +37,7 @@ Role Variables
 | clear_temp_folder | remove temp folder after installation |          boolean           | False | no |
 | clear_before_install | removing old installation before installing new version |          boolean           | False | no |
 | kill_notepad | kill notepad/notepadd++ apps on windows |          boolean           | False | no |
-| cloud_backup_dir | the default path for the cloud backups |           string           | for mac: /Library/Application Support/Experitest/cloud-server <br> for windows: C:\\ProgramData\\cloud-server <br> for linux: /var/lib/Experitest/cloud-server | no |
+| cloud_backup_dir | the default path for the cloud backups |           string           | for mac: /Library/Application Support/Experitest/cloud-server <br> for windows: C:/ProgramData/cloud-server <br> for linux: /var/lib/Experitest/cloud-server | no |
 | download | only download the release version |          boolean           | True | no |
 | deploy | only deploy the release version |          boolean           | True | no |
 Example Playbook
